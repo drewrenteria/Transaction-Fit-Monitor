@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Transaction Fit Monitor</title>
+<style>
+:root{
+  --paper:#FBFBF9; --panel:#FFFFFF; --sunk:#F4F4F1;
+  --ink:#16181C; --ink2:#5C626A; --ink3:#8A9099;
+  --rule:#E0E2E0; --rule-hard:#C8CBC8;
+  --field:#1C2A24; --field-2:#2A3C34; --brass:#C9A227;
+  --strong:#1A6B4A; --possible:#9A6B1F; --review:#5C626A; --no:#8C3A3A;
+  --hi:#8C3A3A; --med:#9A6B1F; --lo:#6B7280;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  font-variant-numeric:tabular-nums;
+}
+.wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+.num{font-variant-numeric:tabular-nums}
+
+/* masthead */
+#snapbar:not(:empty){background:#FCF4E4;border-bottom:1px solid #E8D7B0;
+  color:#6B4C12;font-size:12.5px;padding:9px 0}
+#snapbar .wrap{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+#snapbar b{font-weight:600}
+.mast{background:var(--field);color:#F2F3F1;border-bottom:2px solid var(--brass)}
+.mast .wrap{display:flex;flex-wrap:wrap;gap:18px 26px;align-items:flex-end;
+  justify-content:space-between;padding-top:22px;padding-bottom:20px}
+.mast h1{margin:0;font-size:20px;font-weight:600;letter-spacing:-.015em}
+.mast .sub{margin:5px 0 0;font-size:12.5px;color:#9BA59E;line-height:1.5}
+.mast .sub b{color:#D8DEDA;font-weight:500}
+.picker{display:flex;flex-direction:column;gap:5px;min-width:260px}
+.picker label{font-size:11.5px;color:#9FA8A2}
+.picker select{
+  appearance:none;width:100%;padding:8px 30px 8px 11px;border-radius:3px;
+  border:1px solid #42524A;background:#16231E url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239FA8A2'/%3E%3C/svg%3E") no-repeat right 11px center;
+  color:#F2F3F1;font:inherit;font-size:14px;cursor:pointer;
+}
+.picker select:focus-visible{outline:2px solid var(--brass);outline-offset:1px}
+
+/* verdict + need strip */
+.verdict{border-bottom:1px solid var(--rule);background:var(--panel)}
+.verdict .wrap{padding:24px 24px 0}
+.vtop{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 24px}
+.vhead{font-size:27px;font-weight:600;letter-spacing:-.022em;margin:0;line-height:1.15}
+.vhead em{font-style:normal;color:var(--ink3);font-weight:400}
+.vbreak{font-size:13.5px;color:var(--ink2);margin:0}
+.vbreak b{font-weight:600;color:var(--ink)}
+.chip{display:inline-flex;align-items:center;gap:6px;margin-right:13px}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+
+.brief{margin:18px 0 0;padding:16px 0 0;border-top:1px solid var(--rule)}
+.brieflist{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.brieflist li{font-size:13.5px;line-height:1.45;display:grid;
+  grid-template-columns:92px 1fr;gap:0 12px;align-items:baseline}
+.brieflist .bl{font-size:11.5px;color:var(--ink3)}
+@media (max-width:620px){.brieflist li{grid-template-columns:1fr;gap:1px}}
+.brieflist b{font-weight:600}
+.newtag{font-size:10.5px;font-weight:600;color:#1A5B45;background:#E8F2ED;
+  border:1px solid #BFD9CE;border-radius:2px;padding:1px 5px;vertical-align:1px}
+tr.isnew td{background:#F7FBF9}
+tr.isnew:hover td{background:#F1F7F4}
+
+.needstrip{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));
+  gap:22px 34px;margin:19px 0 0;padding:17px 0 20px;border-top:1px solid var(--rule)}
+.ngroup{min-width:0}
+.nlabel{margin:0 0 9px;font-size:12px;color:var(--ink2);display:flex;
+  align-items:baseline;gap:7px}
+.nlabel b{font-size:12px;font-weight:600;color:var(--ink)}
+.nlist{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.nlist li{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 9px;
+  padding-left:9px;border-left:2px solid var(--rule-hard);line-height:1.35}
+.nlist li.High{border-left-color:var(--hi)}
+.nlist li.Medium{border-left-color:var(--med)}
+.nlist li.Low{border-left-color:var(--lo)}
+.narea{font-size:13.5px;font-weight:600}
+.nmeta{font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.nnone{font-size:13px;color:var(--ink3);padding-left:9px;
+  border-left:2px solid var(--rule)}
+
+/* tabs */
+.tabs{position:sticky;top:0;z-index:20;background:var(--paper);
+  border-bottom:1px solid var(--rule-hard)}
+.tabs .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs .wrap::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:none;font:inherit;font-size:13.5px;
+  color:var(--ink2);padding:11px 14px;cursor:pointer;white-space:nowrap;
+  border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--field)}
+.tab .cnt{color:var(--ink3);font-weight:400;font-size:12px;margin-left:5px}
+.tab:focus-visible{outline:2px solid var(--field);outline-offset:-2px}
+
+main{padding:26px 0 70px}
+.panel[hidden]{display:none}
+h2{font-size:15px;font-weight:600;margin:30px 0 4px;letter-spacing:-.005em}
+h2:first-child{margin-top:0}
+.note{font-size:12.5px;color:var(--ink2);margin:0 0 13px;max-width:70ch}
+
+/* player entries */
+.plist{border-top:1px solid var(--rule)}
+.pl{display:grid;grid-template-columns:3px 1fr;gap:0 15px;
+  border-bottom:1px solid var(--rule);background:var(--panel)}
+.pl .bar{background:var(--rule-hard)}
+.pl.s-strong .bar{background:var(--strong)}
+.pl.s-possible .bar{background:var(--possible)}
+.pl.s-review .bar{background:var(--review)}
+.pl .body{padding:14px 16px 15px}
+.pl-top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;width:100%}
+.pname{font-size:15.5px;font-weight:600;letter-spacing:-.01em}
+.pname a{color:inherit;text-decoration:none;border-bottom:1px solid #CFD3D6}
+.pname a:hover{border-bottom-color:var(--ink)}
+.pmeta{font-size:12.5px;color:var(--ink2)}
+.verdict-line{margin:7px 0 0;font-size:13px}
+.vlabel{font-weight:600}
+.s-strong .vlabel{color:var(--strong)}
+.s-possible .vlabel{color:var(--possible)}
+.s-review .vlabel{color:var(--review)}
+.because{color:var(--ink2)}
+.pritag{font-size:11.5px;padding:1px 6px;border-radius:2px;border:1px solid;
+  white-space:nowrap}
+.pritag.High{color:#7A2E2E;background:#FBEEEE;border-color:#E6C8C8}
+.pritag.Medium{color:#7A5614;background:#FCF4E4;border-color:#E8D7B0}
+.pritag.Low{color:var(--ink3);background:var(--sunk);border-color:var(--rule)}
+.statline{margin:9px 0 0;font-size:12.5px;display:flex;flex-wrap:wrap;gap:3px 16px}
+.statline .src{color:var(--ink3);min-width:38px}
+.statline .kv{color:var(--ink2)}
+.statline .kv b{font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.statline .kv.good b{color:var(--strong)}
+.statline .kv.bad b{color:var(--no)}
+.statline.career{margin-top:4px;opacity:.72}
+.statline.career .src{font-size:11.5px}
+.txtline{margin:9px 0 0;font-size:12.5px;color:var(--ink2)}
+.txtline b{color:var(--ink);font-weight:600}
+
+.clock{font-size:12px;font-weight:600;padding:2px 8px;border-radius:2px;
+  border:1px solid;white-space:nowrap;margin-left:auto}
+.clock.urgent{color:#7A2E2E;background:#FBEEEE;border-color:#E6C8C8}
+.clock.warn{color:#7A5614;background:#FCF4E4;border-color:#E8D7B0}
+.clock.ok{color:var(--ink2);background:var(--sunk);border-color:var(--rule)}
+.clock.gone{color:var(--ink3);background:var(--sunk);border-color:var(--rule)}
+
+.tag{display:inline-block;font-size:11.5px;color:var(--ink2);background:var(--sunk);
+  border:1px solid var(--rule);border-radius:2px;padding:1px 6px;margin-left:5px}
+
+.cmp{margin:9px 0 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;
+  font-size:12.5px;padding-top:9px;border-top:1px dotted var(--rule)}
+.cmplab{color:var(--ink3);min-width:72px}
+.cmpitem{color:var(--ink2);white-space:nowrap}
+.cmpitem b{font-weight:600;font-variant-numeric:tabular-nums}
+.cmpitem.up b{color:var(--strong)}
+.cmpitem.down b{color:var(--no)}
+.cmpitem .arrow{font-size:9px}
+.cmpitem.up .arrow{color:var(--strong)}
+.cmpitem.down .arrow{color:var(--no)}
+.cmpitem .theirs{color:var(--ink3)}
+
+.gone-wrap{margin:16px 0 0;border:1px solid var(--rule);border-radius:2px;
+  background:var(--panel)}
+.gone-wrap summary{cursor:pointer;padding:11px 15px;font-size:13px;color:var(--ink2)}
+.gone-wrap summary:hover{color:var(--ink)}
+.gone-wrap summary:focus-visible{outline:2px solid var(--field);outline-offset:-2px}
+.gonelist{list-style:none;margin:0;padding:0 15px 13px;display:grid;gap:7px}
+.gonelist li{display:flex;flex-wrap:wrap;gap:3px 12px;font-size:12.5px;
+  color:var(--ink3);padding-top:7px;border-top:1px solid var(--rule)}
+.gonelist b{color:var(--ink2);font-weight:600}
+
+/* tables */
+.tscroll{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:12.5px}
+th,td{text-align:left;padding:8px 11px;border-bottom:1px solid var(--rule);
+  vertical-align:top;white-space:nowrap}
+th{background:var(--sunk);font-weight:600;color:var(--ink2);
+  position:sticky;top:0;border-bottom:1px solid var(--rule-hard)}
+td.w{white-space:normal;min-width:260px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:#FAFAF7}
+.pri{font-weight:600}
+.pri.High{color:var(--hi)} .pri.Medium{color:var(--med)} .pri.Low{color:var(--lo)}
+.gap{display:inline-block;width:62px;height:5px;background:var(--sunk);
+  border:1px solid var(--rule);vertical-align:middle;margin-left:7px;position:relative}
+.gap i{position:absolute;left:0;top:0;bottom:0;background:var(--hi);display:block}
+.lbl{font-weight:600}
+.lbl.Strong{color:var(--strong)} .lbl.Possible{color:var(--possible)}
+.lbl.Review{color:var(--review)} .lbl.No{color:var(--no)} .lbl.NA{color:var(--ink3)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 11px}
+.toolbar input,.toolbar select{font:inherit;font-size:13px;padding:6px 9px;
+  border:1px solid var(--rule-hard);border-radius:2px;background:var(--panel);color:var(--ink)}
+.toolbar input{min-width:210px}
+.toolbar input:focus-visible,.toolbar select:focus-visible{outline:2px solid var(--field);outline-offset:1px}
+
+.btn{font:inherit;font-size:13px;padding:8px 14px;border:1px solid var(--rule-hard);
+  border-radius:2px;background:var(--panel);color:var(--ink);cursor:pointer}
+.btn:hover{background:var(--sunk)}
+.btn:focus-visible{outline:2px solid var(--field);outline-offset:1px}
+h3{font-size:13.5px;font-weight:600;margin:22px 0 7px}
+.empty{padding:26px 16px;color:var(--ink2);font-size:13px;
+  border:1px dashed var(--rule-hard);border-radius:2px;background:var(--panel)}
+
+.kv2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:0;border:1px solid var(--rule);border-radius:2px;background:var(--panel)}
+.kv2 div{padding:11px 14px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.kv2 dt{font-size:12px;color:var(--ink2);margin:0 0 3px}
+.kv2 dd{margin:0;font-size:17px;font-weight:600;font-variant-numeric:tabular-nums}
+
+footer{border-top:1px solid var(--rule);margin-top:44px;padding-top:16px;
+  font-size:12px;color:var(--ink3);max-width:76ch}
+
+@media (max-width:720px){
+  .wrap{padding:0 15px}
+  .mast .wrap{align-items:stretch}
+  .picker{min-width:0}
+  .vhead{font-size:21px}
+  th,td{padding:7px 9px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  .tabs{position:static} .panel[hidden]{display:block!important}
+  .mast{background:#fff;color:#000;border-bottom:2px solid #000}
+  .mast .sub{color:#444} .picker{display:none}
+  th{position:static}
+}
+</style>
+</head>
+<body>
+
+<div id="snapbar"></div>
+<header class="mast">
+  <div class="wrap">
+    <div>
+      <h1>Transaction Fit Monitor</h1>
+      <p class="sub" id="subline"></p>
+    </div>
+    <div class="picker">
+      <label for="org">Target organization</label>
+      <select id="org"></select>
+    </div>
+  </div>
+</header>
+
+<section class="verdict">
+  <div class="wrap">
+    <div class="vtop">
+      <p class="vhead" id="vhead"></p>
+      <p class="vbreak" id="vbreak"></p>
+    </div>
+    <div class="brief" id="brief"></div>
+    <div class="needstrip" id="needstrip"></div>
+  </div>
+</section>
+
+<nav class="tabs"><div class="wrap" role="tablist" id="tablist"></div></nav>
+
+<main class="wrap">
+  <div class="panel" id="p-brief" role="tabpanel"></div>
+  <div class="panel" id="p-flagged" role="tabpanel" hidden></div>
+  <div class="panel" id="p-mlb" role="tabpanel" hidden></div>
+  <div class="panel" id="p-farm" role="tabpanel" hidden></div>
+  <div class="panel" id="p-txns" role="tabpanel" hidden></div>
+  <div class="panel" id="p-audit" role="tabpanel" hidden></div>
+  <footer id="foot"></footer>
+</main>
+
+<script id="payload" type="application/json">__PAYLOAD__</script>
+<script>
+"use strict";
+const D = JSON.parse(document.getElementById("payload").textContent);
+
+/* ---------- fit logic (ported from the R categorical labels) ---------- */
+const MIN_MLB_IP = 10, MIN_MLB_PA = 40;   // which line to read (MLB vs MiLB)
+const EVAL_MIN_IP = 15, EVAL_MIN_PA = 50; // floor to grade a line at all
+
+// Sample needed before a rate means anything. Strikeout rate settles quickly;
+// on-base, slugging, ERA and WHIP take most of a season. Without this, a hot
+// 60-plate-appearance stretch reads as a real skill -- and because only the
+// good numbers get flagged, the list fills up with players whose rates are
+// high precisely because the sample is small.
+const THIN_FLOOR = 0.6;  // credit a near-threshold sample, drop a far one
+const RELIABLE_PA = {Kp:60, BBp:120, ISO:160, SLG:200, OPS:200, OBP:200,
+                     wRCplus:200, BsR:200, Def:200, DRS:200, Spd:200};
+// Strict stabilization for pitchers is ~70 BF for K% and ~170 BF for BB%
+// (roughly 17 and 40 IP). ERA and WHIP never really stabilize within a season.
+// Relievers are the bulk of the waiver population, so these sit at the point
+// where a relief season is gradeable, with thinner lines marked rather than
+// dropped.
+const RELIABLE_IP = {Kp:17, BBp:40, KBBp:40, HR9:60, ERA:60, WHIP:60,
+                     FIP:40, xFIP:40};
+
+const PIT_POS = {BBp:v=>v<=8.5, Kp:v=>v>=23, KBBp:v=>v>=15, WHIP:v=>v<=1.25, ERA:v=>v<=4.00, HR9:v=>v<=1.10,
+                 FIP:v=>v<=4.00, xFIP:v=>v<=4.00};
+const PIT_RISK= {BBp:v=>v>=11,  Kp:v=>v<=18, KBBp:v=>v<=8,  WHIP:v=>v>=1.40, ERA:v=>v>=5.00, HR9:v=>v>=1.50,
+                 FIP:v=>v>=5.00, xFIP:v=>v>=5.00};
+const HIT_POS = {OBP:v=>v>=.330, BBp:v=>v>=9, Kp:v=>v<=22, ISO:v=>v>=.170, OPS:v=>v>=.750, SLG:v=>v>=.400,
+                 wRCplus:v=>v>=105, BsR:v=>v>0, Def:v=>v>0, DRS:v=>v>0, Spd:v=>v>=5.0};
+const HIT_RISK= {OBP:v=>v<.300,  BBp:v=>v<6,  Kp:v=>v>=28, ISO:v=>v<.120,  OPS:v=>v<.650,  SLG:v=>v<.330,
+                 wRCplus:v=>v<85, BsR:v=>v<-1, Def:v=>v<-3, DRS:v=>v<-5, Spd:v=>v<3.5};
+
+/* which player metric answers which need metric */
+const NEED_TO_STAT = {
+  "OBP":"OBP","SLG":"SLG","OPS":"OPS","ISO":"ISO","BB%":"BBp","K%":"Kp",
+  "ERA":"ERA","WHIP":"WHIP","HR/9":"HR9",
+  "wRC+":"wRCplus","FIP":"FIP","xFIP":"xFIP",
+  "DRS":"DRS","Def":"Def","BsR":"BsR","Spd":"Spd"
+};
+
+function pickLine(pl, scope){
+  /* returns {src, hit, pit} choosing MLB or MiLB line per the R rules.
+     For major league evaluation the FanGraphs line wins when it exists: wRC+,
+     FIP and DRS are park- and league-adjusted, raw Stats API rates are not. */
+  if(scope==="MLB"){
+    if(pl.g==="Pitching" && pl.fp && pl.fp.IP>0) return {src:"MLB", pit:pl.fp, fg:true};
+    if(pl.g!=="Pitching" && pl.fb && pl.fb.PA>0) return {src:"MLB", hit:pl.fb, fg:true};
+  }
+  const mh=pl.mh, mp=pl.mp, nh=pl.nh, np=pl.np;
+  if(pl.g==="Pitching"){
+    const useM = scope==="MLB" && mp && mp.IP>0 && (mp.IP>=MIN_MLB_IP || !np || !np.IP);
+    if(useM) return {src:"MLB", pit:mp};
+    if(scope==="MiLB") return np&&np.IP>0 ? {src:"MiLB",pit:np} : (mp&&mp.IP>0?{src:"MLB",pit:mp}:{});
+    if(np&&np.IP>0) return {src:"MiLB",pit:np};
+    if(mp&&mp.IP>0) return {src:"MLB",pit:mp};
+    return {};
+  }
+  const useM = scope==="MLB" && mh && mh.PA>0 && (mh.PA>=MIN_MLB_PA || !nh || !nh.PA);
+  if(useM) return {src:"MLB", hit:mh};
+  if(scope==="MiLB") return nh&&nh.PA>0 ? {src:"MiLB",hit:nh} : (mh&&mh.PA>0?{src:"MLB",hit:mh}:{});
+  if(nh&&nh.PA>0) return {src:"MiLB",hit:nh};
+  if(mh&&mh.PA>0) return {src:"MLB",hit:mh};
+  return {};
+}
+
+function evaluate(pl, needs, scope){
+  const isPit = pl.g==="Pitching";
+  // Defense and baserunning needs are answered by position players, and their
+  // values live on the batting record alongside wRC+.
+  const cats = isPit ? ["Pitching"] : ["Hitting","Defense","Baserunning"];
+  const rel = needs.filter(n=>cats.includes(n.cat));
+  if(!rel.length) return {label:"Awareness only", cls:"NA", need:null, hits:[], misses:[], line:pickLine(pl,scope)};
+
+  const line = pickLine(pl, scope);
+  const stats = isPit ? line.pit : line.hit;
+  const area  = rel[0].area;
+  if(!stats) return {label:"Stats unavailable", cls:"NA", need:area, hits:[], misses:[], line};
+
+  // A 1.0 IP shutout is not a strong match. Grade nothing below the floor.
+  const sample = isPit ? stats.IP : stats.PA;
+  const floor  = isPit ? EVAL_MIN_IP : EVAL_MIN_PA;
+  if(!(sample >= floor)){
+    return {label:"Insufficient sample", cls:"NA", need:area, hits:[], misses:[],
+            line, thin:`${isPit ? stats.IP.toFixed(1)+" IP" : Math.round(stats.PA)+" PA"}, under the ${floor} ${isPit?"IP":"PA"} minimum to grade`};
+  }
+
+  const POS = isPit?PIT_POS:HIT_POS, RISK = isPit?PIT_RISK:HIT_RISK;
+  const hits=[], misses=[];
+
+  // A strength only counts if it answers a stated need AND rests on enough
+  // sample to be real. Red flags are deliberately NOT gated: missing a decent
+  // player costs less than surfacing a bad one.
+  // Two tiers rather than a hard cutoff. Above the stabilization point a rate
+  // is treated as a real skill. Between the floor and that point it still
+  // counts, but it is marked thin and can never produce a "Strong match" on
+  // its own -- which is the case that was filling the list with small-sample
+  // rates that look good precisely because the sample is small.
+  const RELIABLE = isPit ? RELIABLE_IP : RELIABLE_PA;
+  const seen = new Set();
+  for(const n of rel){
+    const key = NEED_TO_STAT[n.metric];
+    if(!key || seen.has(key)) continue;
+    seen.add(key);
+    const v = stats[key];
+    if(v===undefined||v===null) continue;
+    if(POS[key] && POS[key](v)){
+      const need = RELIABLE[key] ?? 0;
+      const meta = {metric:n.metric, key, v, area:n.area, z:n.z, pri:n.pri};
+      // Near the stabilization point the rate still carries information, so it
+      // counts as thin. Far below it, it carries almost none, so it is dropped
+      // outright: 60 plate appearances says nothing about on-base ability.
+      if(sample >= need){ hits.push({...meta, thin:false}); }
+      else if(sample >= need * THIN_FLOOR){
+        // A thin current season is answered if the three-year line clears the
+        // same bar on real sample. That is the whole reason to carry history.
+        const car = isPit ? pl.cp : pl.cb;
+        const carSample = car ? (isPit ? car.IP : car.PA) : 0;
+        const backed = car && carSample >= need && car[key]!=null && POS[key](car[key]);
+        hits.push({...meta, thin: !backed, backed: !!backed,
+                   carV: backed ? car[key] : null, carSample: backed ? carSample : null});
+      }
+    }
+  }
+  const solid = hits.filter(h=>!h.thin);
+  const unreliable = hits.filter(h=>h.thin);
+
+  // A weakness counts regardless of whether that metric is a stated need.
+  // Otherwise a pitcher with a 7.81 ERA reads as a "possible match" purely
+  // because his walk rate answers a command need. You do not acquire that arm.
+  const LABEL_OF = {OBP:"OBP",SLG:"SLG",OPS:"OPS",ISO:"ISO",BBp:"BB%",Kp:"K%",
+                    ERA:"ERA",WHIP:"WHIP",HR9:"HR/9",KBBp:"K-BB%"};
+  for(const key of Object.keys(RISK)){
+    const v = stats[key];
+    if(v===undefined||v===null) continue;
+    if(RISK[key](v)) misses.push({metric:LABEL_OF[key]||key, key, v,
+                                  need:seen.has(key)});
+  }
+  // Descriptive, not a confidence grade. The backtest cannot show that these
+  // labels predict anything, so they state what was actually cleared.
+  const nNeed = new Set(rel.map(n=>NEED_TO_STAT[n.metric]).filter(Boolean)).size;
+  const n = hits.length;
+  const plural = x => x===1 ? "" : "s";
+  let label, cls;
+  if(misses.length>=2){ label="Works against your needs"; cls="No"; }
+  else if(misses.length>=1 && n===0){ label="Works against your needs"; cls="No"; }
+  else if(solid.length>=2 && misses.length===0){
+    label=`Clears ${n} of ${nNeed} need${plural(nNeed)}`; cls="Strong"; }
+  else if(n>=1){ label=`Clears ${n} of ${nNeed} need${plural(nNeed)}`; cls="Possible"; }
+  else { label="Clears none of your needs"; cls="Review"; }
+  // How bad is the worst problem this player addresses? Drives ordering, so a
+  // fit against the club's most acute gap outranks one against a marginal gap.
+  const sev = hits.length ? Math.max(...hits.map(h=>Math.abs(h.z||0))) : 0;
+  const topPri = hits.length
+    ? (hits.find(h=>h.pri==="High") ? "High"
+       : hits.find(h=>h.pri==="Medium") ? "Medium" : "Low")
+    : null;
+  return {label, cls, need:area, hits, misses, line, unreliable, sample, sev, topPri};
+}
+
+/* ---------- formatting ---------- */
+const fAvg = v => v==null ? "—" : v.toFixed(3).replace(/^0/,"");
+const fNum = (v,d) => v==null ? "—" : v.toFixed(d);
+const fPct = v => v==null ? "—" : v.toFixed(1)+"%";
+const ord = n => { const t=n%100; if(t>=11&&t<=13) return n+"th";
+  return n + ({1:"st",2:"nd",3:"rd"}[n%10] || "th"); };
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+function statChips(pl, ev){
+  const L = ev.line; if(!L || !L.src) return "";
+  const good=new Set(ev.hits.map(h=>h.key)), bad=new Set(ev.misses.map(m=>m.key));
+  const k=(key,label,val)=>`<span class="kv ${good.has(key)?"good":bad.has(key)?"bad":""}">${label} <b>${val}</b></span>`;
+  const srcTag = L.fg ? "FG" : L.src;
+  if(L.pit){
+    const s=L.pit;
+    return `<div class="statline"><span class="src">${srcTag}</span>`+
+      k("IP","IP",fNum(s.IP,1))+k("ERA","ERA",fNum(s.ERA,2))+
+      (s.FIP!=null?k("FIP","FIP",fNum(s.FIP,2)):"")+
+      (s.xFIP!=null?k("xFIP","xFIP",fNum(s.xFIP,2)):"")+
+      k("WHIP","WHIP",fNum(s.WHIP,2))+
+      k("Kp","K%",fPct(s.Kp))+k("BBp","BB%",fPct(s.BBp))+k("KBBp","K-BB%",fPct(s.KBBp))+
+      k("HR9","HR/9",fNum(s.HR9,2))+
+      (s.levels?`<span class="kv">${esc(s.levels)}</span>`:"")+`</div>`;
+  }
+  if(L.hit){
+    const s=L.hit;
+    return `<div class="statline"><span class="src">${srcTag}</span>`+
+      k("PA","PA",Math.round(s.PA))+
+      (s.wRCplus!=null?k("wRCplus","wRC+",Math.round(s.wRCplus)):"")+
+      (s.AVG!=null?`<span class="kv">${fAvg(s.AVG)}/${fAvg(s.OBP)}/${fAvg(s.SLG)}</span>`
+                  :`<span class="kv">OBP <b>${fAvg(s.OBP)}</b></span><span class="kv">SLG <b>${fAvg(s.SLG)}</b></span>`)+
+      (s.OPS!=null?k("OPS","OPS",fAvg(s.OPS)):"")+k("ISO","ISO",fAvg(s.ISO))+
+      k("Kp","K%",fPct(s.Kp))+k("BBp","BB%",fPct(s.BBp))+
+      (s.BsR!=null?k("BsR","BsR",fNum(s.BsR,1)):"")+
+      (s.Def!=null?k("Def","Def",fNum(s.Def,1)):"")+
+      (s.HR!=null?`<span class="kv">HR <b>${Math.round(s.HR)}</b></span>`:"")+
+      (s.levels?`<span class="kv">${esc(s.levels)}</span>`:"")+`</div>`;
+  }
+  return "";
+}
+
+function careerChips(pl, ev){
+  const isPit = pl.g==="Pitching";
+  const c = isPit ? pl.cp : pl.cb;
+  if(!c) return "";
+  const span = `${D.spanFrom}\u2013${D.window.end.slice(0,4)}`;
+  if(isPit) return `<div class="statline career"><span class="src">${span}</span>`+
+    `<span class="kv">IP <b>${fNum(c.IP,1)}</b></span>`+
+    (c.FIP!=null?`<span class="kv">FIP <b>${fNum(c.FIP,2)}</b></span>`:"")+
+    (c.ERA!=null?`<span class="kv">ERA <b>${fNum(c.ERA,2)}</b></span>`:"")+
+    (c.Kp!=null?`<span class="kv">K% <b>${fPct(c.Kp)}</b></span>`:"")+
+    (c.BBp!=null?`<span class="kv">BB% <b>${fPct(c.BBp)}</b></span>`:"")+
+    (c.WAR!=null?`<span class="kv">WAR <b>${fNum(c.WAR,1)}</b></span>`:"")+`</div>`;
+  return `<div class="statline career"><span class="src">${span}</span>`+
+    `<span class="kv">PA <b>${Math.round(c.PA)}</b></span>`+
+    (c.wRCplus!=null?`<span class="kv">wRC+ <b>${Math.round(c.wRCplus)}</b></span>`:"")+
+    (c.OBP!=null?`<span class="kv">OBP <b>${fAvg(c.OBP)}</b></span>`:"")+
+    (c.ISO!=null?`<span class="kv">ISO <b>${fAvg(c.ISO)}</b></span>`:"")+
+    (c.Kp!=null?`<span class="kv">K% <b>${fPct(c.Kp)}</b></span>`:"")+
+    (c.WAR!=null?`<span class="kv">WAR <b>${fNum(c.WAR,1)}</b></span>`:"")+`</div>`;
+}
+
+function because(ev){
+  const out=[];
+  const solid = ev.hits.filter(h=>!h.thin && !h.backed);
+  const backed = ev.hits.filter(h=>h.backed);
+  const thin = ev.hits.filter(h=>h.thin);
+  if(solid.length) out.push("Supports "+solid.map(h=>h.metric).join(", ")+".");
+  if(backed.length)
+    out.push("Supports "+backed.map(h=>h.metric).join(", ")
+             +", and the three-year line agrees.");
+  if(thin.length)
+    out.push("Supports "+thin.map(h=>h.metric).join(", ")
+             +" on limited sample, so it caps at possible.");
+  const onNeed  = ev.misses.filter(m=>m.need).map(m=>m.metric);
+  const general = ev.misses.filter(m=>!m.need).map(m=>m.metric);
+  if(onNeed.length)  out.push("Falls short on "+onNeed.join(", ")+".");
+  if(general.length) out.push("Red flag on "+general.join(", ")+".");
+  return out.join(" ");
+}
+
+/* ---------- state ---------- */
+const S = {org:null, tab:"brief", q:"", typeF:"", scopeF:""};
+const byId = {};
+D.txns.forEach(t=>{ if(t.pid) (byId[t.pid]=byId[t.pid]||[]).push(t); });
+
+const WAS_ON_MARKET = new Set(["Claimed","Signed elsewhere","Traded",
+                               "Stayed in org","Window lapsed","Resolved"]);
+function computeFlagged(org){
+  const mlbNeeds = D.mlbNeeds[org]||[], farmNeeds = D.farmNeeds[org]||[];
+  const out = {mlb:[], farm:[], mlbNeeds, farmNeeds, gone:[]};
+
+  // Only players who are actually gettable today. A player who was DFA'd and
+  // then claimed, signed elsewhere, or outrighted back into his own org is not
+  // an opportunity, however well he fits.
+  for(const pid in D.avail){
+    const a = D.avail[pid];
+    const pl = D.players[pid];
+    if(!pl || pl.g==="Unknown") continue;
+    const scope = a.scope;
+    if(scope!=="MLB" && scope!=="MiLB") continue;
+    const needs = scope==="MLB" ? mlbNeeds : farmNeeds;
+    if(!needs.length) continue;
+    const ev = evaluate(pl, needs, scope);
+    if(ev.cls!=="Strong" && ev.cls!=="Possible") continue;
+    const rec = {pid, a, pl, ev, scope};
+    if(a.avail){ out[scope==="MLB"?"mlb":"farm"].push(rec); }
+    else if(WAS_ON_MARKET.has(a.st)){
+      // Only players who were genuinely available and have since been taken.
+      // Someone who was merely activated or optioned was never an opportunity.
+      out.gone.push(rec);
+    }
+  }
+  // Rank by how real the decision is: a Triple-A free agent is an org decision,
+  // an 18-year-old complex-league release mostly is not. Level outranks label.
+  const rank = {Strong:0, Possible:1};
+  const LEVEL_RANK = {"MLB":0,"Triple-A":1,"Double-A":2,"High-A":3,"Single-A":4,"Rookie":5};
+  const lv = r => LEVEL_RANK[r.a.lvl] ?? 6;
+  // Strongest fits first, and within those the ones answering the club's worst
+  // problem. Level and the clock break remaining ties. Deliberately NOT a
+  // numeric composite: no hidden score decides what the label already says.
+  const order = (x,y) => (rank[x.ev.cls]-rank[y.ev.cls])
+    || (y.ev.sev - x.ev.sev)
+    || (lv(x)-lv(y))
+    || ((x.a.days==null?99:x.a.days) - (y.a.days==null?99:y.a.days))
+    || (y.a.since < x.a.since ? -1 : 1);
+  out.mlb.sort(order); out.farm.sort(order); out.gone.sort(order);
+  return out;
+}
+
+/* ---------- availability presentation ---------- */
+function clockHtml(a){
+  if(a.st==="DFA" && a.days!=null){
+    const urgent = a.days<=2;
+    const txt = a.days===0 ? "Last day to claim"
+              : a.days===1 ? "1 day left to claim"
+              : `${a.days} days left to claim`;
+    return `<span class="clock ${urgent?"urgent":"warn"}">${txt}</span>`;
+  }
+  if(a.st==="Free agent")
+    return `<span class="clock ok">Free agent, ${a.onMarketDays} day${a.onMarketDays===1?"":"s"} on the market</span>`;
+  return `<span class="clock gone">${esc(a.st)}</span>`;
+}
+
+/* How much better is he than what the org currently runs out there? */
+const LOWER_BETTER = new Set(["Kp_hit","ERA","WHIP","HR9","BBp_pit"]);
+function upgradeRows(ev, needs, isPit){
+  const rows=[];
+  const stats = isPit ? ev.line.pit : ev.line.hit;
+  if(!stats) return rows;
+  const seen=new Set();
+  for(const n of needs){
+    if(n.cat !== (isPit?"Pitching":"Hitting")) continue;
+    const key = NEED_TO_STAT[n.metric];
+    if(!key || seen.has(key)) continue;
+    seen.add(key);
+    const mine = stats[key];
+    if(mine==null) continue;
+    // lower is better for K% (hitters), ERA, WHIP, HR/9, BB% (pitchers)
+    const lower = (key==="Kp" && !isPit) || ["ERA","WHIP","HR9","FIP","xFIP"].includes(key)
+                  || (key==="BBp" && isPit);
+    const better = lower ? mine < n.val : mine > n.val;
+    rows.push({metric:n.metricFull, area:n.area, mine, theirs:n.val, better, key});
+  }
+  return rows;
+}
+function fmtStat(key, v){
+  if(v==null) return "\u2014";
+  if(["OBP","SLG","OPS","ISO"].includes(key)) return fAvg(v);
+  if(["Kp","BBp","KBBp"].includes(key)) return fPct(v);
+  if(["wRCplus","DRS"].includes(key)) return Math.round(v).toString();
+  if(["BsR","Def","Spd"].includes(key)) return fNum(v,1);
+  return fNum(v,2);
+}
+
+function renderPlayers(list, scope, needs){
+  if(!list.length) return `<div class="empty">No player currently on the market fits ${scope==="MLB"?"a major league need":"a farm system need"}. This is a real result, not missing data.</div>`;
+  return `<div class="plist">`+list.map(({pid,a,pl,ev})=>{
+    const cls = ev.cls==="Strong"?"s-strong":ev.cls==="Possible"?"s-possible":"s-review";
+    const why = because(ev);
+    const isPit = pl.g==="Pitching";
+    const ups = upgradeRows(ev, needs, isPit);
+    const upHtml = ups.length ? `<div class="cmp"><span class="cmplab">vs your club</span>`+
+      ups.map(u=>`<span class="cmpitem ${u.better?"up":"down"}">${esc(u.metric)}
+        <b>${fmtStat(u.key,u.mine)}</b> <span class="arrow">${u.better?"\u25b2":"\u25bc"}</span>
+        <span class="theirs">you ${fmtStat(u.key,u.theirs)}</span></span>`).join("")+`</div>` : "";
+    return `<article class="pl ${cls}"><div class="bar"></div><div class="body">
+      <div class="pl-top">
+        <span class="pname"><a href="https://www.mlb.com/player/${pid}" target="_blank" rel="noopener">${esc(pl.n)}</a></span>
+        <span class="pmeta">${esc(pl.p||"")}${pl.a?" &middot; "+pl.a:""}${pl.b&&pl.t?" &middot; B/T "+esc(pl.b)+"/"+esc(pl.t):""}${a.lvl?" &middot; "+esc(a.lvl):""}</span>
+        ${clockHtml(a)}
+      </div>
+      <p class="verdict-line"><span class="vlabel">${esc(ev.label)}</span>
+        <span class="because">for ${esc(ev.need||"a stated need")}${ev.topPri?` <span class="pritag ${ev.topPri}">${ev.topPri.toLowerCase()} priority</span>`:""}.${why?" "+esc(why):""}${ev.thin?" Only "+esc(ev.thin)+".":""}</span></p>
+      ${statChips(pl,ev)}
+      ${careerChips(pl,ev)}
+      ${upHtml}
+      <p class="txtline"><b>${esc(a.path||"")}</b>${a.cost?" "+esc(a.cost):""}
+        ${a.on40?`<span class="tag">On a 40-man</span>`:""}</p>
+      <p class="txtline">${esc(a.openType||"")} by ${esc(a.from||"\u2014")} on ${esc(a.since)}</p>
+    </div></article>`;
+  }).join("")+`</div>`;
+}
+
+function renderGone(list){
+  if(!list.length) return "";
+  return `<details class="gone-wrap"><summary>${list.length} player${list.length===1?"":"s"} fit a need but ${list.length===1?"has":"have"} already been taken</summary>
+    <ul class="gonelist">`+list.map(({pid,a,pl,ev})=>
+      `<li><b>${esc(pl.n)}</b> <span>${esc(pl.p||"")}</span>
+        <span class="gstat">${esc(ev.label)} for ${esc(ev.need||"a need")}</span>
+        <span class="gwhy">${esc(a.st)}${a.by?" by "+esc(a.by):""} on ${esc(a.since)}</span></li>`).join("")+
+    `</ul></details>`;
+}
+
+function needsTable(needs, scopeLabel){
+  if(!needs.length) return `<div class="empty">No metric puts ${esc(S.org)} far enough below league average to flag a ${scopeLabel} need.</div>`;
+  const maxZ = Math.max(...needs.map(n=>Math.abs(n.z)));
+  return `<div class="tscroll"><table><thead><tr>
+    <th>Need area</th><th>Metric</th><th>Value</th><th>Lg avg</th>
+    <th>Rank</th><th>Gap</th><th>Priority</th><th>Profile to target</th>
+  </tr></thead><tbody>`+needs.map(n=>{
+    const isRate = ["OBP","SLG","OPS","ISO"].includes(n.metric);
+    const fmt = v => isRate ? fAvg(v) : (n.metric.endsWith("%") ? fPct(v) : fNum(v,2));
+    const w = Math.round(Math.abs(n.z)/maxZ*100);
+    return `<tr><td>${esc(n.area)}</td><td>${esc(n.metricFull)}</td>
+      <td class="num">${fmt(n.val)}</td><td class="num">${fmt(n.mean)}</td>
+      <td class="num">${n.rank} of ${n.n}</td>
+      <td class="num">${n.z.toFixed(2)} SD<span class="gap"><i style="width:${w}%"></i></span></td>
+      <td class="pri ${n.pri}">${n.pri}</td><td class="w">${esc(n.profile)}</td></tr>`;
+  }).join("")+`</tbody></table></div>`;
+}
+
+function txnTable(rows){
+  if(!rows.length) return `<div class="empty">No transactions match these filters.</div>`;
+  const needsFor = sc => sc==="MLB" ? (D.mlbNeeds[S.org]||[]) : (D.farmNeeds[S.org]||[]);
+  return `<div class="tscroll"><table><thead><tr>
+    <th>Date</th><th>Player</th><th>Pos</th><th>Type</th><th>Scope</th>
+    <th>Organization</th><th>Level</th><th>Fit</th><th>Stat line</th>
+  </tr></thead><tbody>`+rows.slice(0,400).map(t=>{
+    const pl = t.pid ? D.players[t.pid] : null;
+    let lbl="—", cls="NA", sline="";
+    if(pl && t.acq && (t.sc==="MLB"||t.sc==="MiLB")){
+      const ev = evaluate(pl, needsFor(t.sc), t.sc);
+      lbl = ev.label; cls = ev.cls;
+      const L = ev.line;
+      if(L && L.pit) sline = `${L.src} IP ${fNum(L.pit.IP,1)}, ERA ${fNum(L.pit.ERA,2)}, WHIP ${fNum(L.pit.WHIP,2)}`;
+      else if(L && L.hit) sline = `${L.src} PA ${Math.round(L.hit.PA)}, OPS ${fAvg(L.hit.OPS)}, K% ${fPct(L.hit.Kp)}`;
+    }
+    const nm = t.pid ? `<a href="https://www.mlb.com/player/${t.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(pl?pl.n:"—")}</a>` : "—";
+    return `<tr><td class="num">${esc(t.d)}</td><td>${nm}</td><td>${esc(pl?pl.p:"")}</td>
+      <td>${esc(t.ty)}</td><td>${esc(t.sc)}</td><td>${esc(t.org||"—")}</td>
+      <td>${esc(t.lvl||"—")}</td><td class="lbl ${cls}">${esc(lbl)}</td>
+      <td>${esc(sline)}</td></tr>`;
+  }).join("")+`</tbody></table></div>`
+  + (rows.length>400?`<p class="note" style="margin-top:9px">Showing the 400 most recent of ${rows.length.toLocaleString()}. Use the filters above to narrow this down.</p>`:"");
+}
+
+/* ---------- render ---------- */
+function render(){
+  const org = S.org;
+  const F = computeFlagged(org);
+  const nStrong = [...F.mlb,...F.farm].filter(x=>x.ev.cls==="Strong").length;
+  const nPoss   = [...F.mlb,...F.farm].filter(x=>x.ev.cls==="Possible").length;
+  const total   = F.mlb.length+F.farm.length;
+  const nNeeds  = F.mlbNeeds.length+F.farmNeeds.length;
+
+  const sb = document.getElementById("snapbar");
+  if(sb) sb.innerHTML = D.snapshot
+    ? `<div class="wrap"><b>Point-in-time snapshot, ${esc(D.asOf)}.</b> ${esc(D.caveat||"")}</div>` : "";
+
+  document.getElementById("subline").innerHTML =
+    `<b>${D.audit.txnTotal.toLocaleString()}</b> transactions league-wide, <span style="white-space:nowrap">${D.window.start} to ${D.window.end}</span><br>
+     Major and minor league moves, scored against the selected organization's needs`;
+
+  document.getElementById("vhead").innerHTML = total
+    ? `${total} potential fit${total===1?"":"s"} <em>for ${esc(org)}</em>`
+    : `No potential fits <em>for ${esc(org)}</em>`;
+
+  document.getElementById("vbreak").innerHTML = total
+    ? `<span class="chip"><span class="dot" style="background:var(--strong)"></span><b>${nStrong}</b>&nbsp;strong</span>
+       <span class="chip"><span class="dot" style="background:var(--possible)"></span><b>${nPoss}</b>&nbsp;possible</span>
+       across <b>${nNeeds}</b> flagged need${nNeeds===1?"":"s"}`
+    : nNeeds
+      ? `${nNeeds} need${nNeeds===1?"":"s"} flagged, but no player who moved in this window fits one.`
+      : `No metric puts this organization far enough below league average to flag a need.`;
+
+  // Need areas stated up top rather than buried in a tab.
+  const needList = (arr, label) => `<div class="ngroup">
+      <p class="nlabel"><b>${label}</b> ${arr.length} flagged</p>
+      ${arr.length ? `<ul class="nlist">`+arr.map(n=>
+          `<li class="${n.pri}"><span class="narea">${esc(n.area)}</span>
+             <span class="nmeta">${esc(n.metricFull)}, ${ord(n.rank)} of ${n.n}, ${n.pri.toLowerCase()} priority</span></li>`
+        ).join("")+`</ul>`
+        : `<p class="nnone">Nothing below the threshold.</p>`}
+    </div>`;
+  document.getElementById("needstrip").innerHTML =
+    needList(F.mlbNeeds, "Major league needs") + needList(F.farmNeeds, "Farm system needs");
+
+  // tabs
+  const tabs = [
+    ["brief","Brief", null],
+    ["flagged","Potential fits", total],
+    ["mlb","MLB club", F.mlbNeeds.length],
+    ["farm","Farm system", F.farmNeeds.length],
+    ["txns","Transactions", D.audit.txnTotal],
+    ["audit","Audit", null],
+  ];
+  document.getElementById("tablist").innerHTML = tabs.map(([id,label,cnt])=>
+    `<button class="tab" role="tab" data-tab="${id}" aria-selected="${S.tab===id}"
+      aria-controls="p-${id}">${label}${cnt!=null?`<span class="cnt">${cnt}</span>`:""}</button>`).join("");
+
+  // Only the active panel is built. The transactions table alone is ~400 rows;
+  // rendering all five panels on every org change is what makes a dashboard feel slow.
+  const need = id => S.tab===id;
+
+  // flagged
+  // ---- Brief: the league half and the fit half on one screen ----
+  const board = D.board || [];
+  const topFit = (F.mlb[0] || F.farm[0]);
+  const topName = board[0];
+  const newOnes = board.filter(b=>b.new);
+  const clocks = board.filter(b=>b.st==="DFA" && b.days!=null).sort((a,c)=>a.days-c.days);
+
+  const boardRow = b => `<tr${b.new?' class="isnew"':""}>
+      <td><a href="https://www.mlb.com/player/${b.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(b.n)}</a>${b.new?' <span class="newtag">new</span>':""}</td>
+      <td>${esc(b.p||"")}</td><td class="num">${b.a??""}</td>
+      <td>${esc(b.lvl||"")}</td>
+      <td class="num">${b.war!=null?b.war.toFixed(1):"\u2014"}</td>
+      <td class="num">${b.sample!=null?Math.round(b.sample)+" "+b.unit:"\u2014"}</td>
+      <td>${esc(b.openType||b.st)} ${b.from?"by "+esc(b.from):""}</td>
+      <td class="num">${b.st==="DFA"&&b.days!=null?b.days+"d left":b.onMarketDays+"d"}</td>
+    </tr>`;
+
+  if(need("brief")) document.getElementById("p-brief").innerHTML = `
+    <h2>Fits for ${esc(org)}</h2>
+    <p class="note">The same board filtered to players whose production answers a flagged need. Full detail on the Potential fits tab.</p>
+    ${total
+      ? `<div class="tscroll"><table><thead><tr><th>Player</th><th>Pos</th><th>Level</th><th>Answers</th><th>Reading</th><th>On market</th></tr></thead><tbody>
+          ${[...F.mlb,...F.farm].slice(0,10).map(r=>`<tr${r.a.new?' class="isnew"':""}>
+            <td><a href="https://www.mlb.com/player/${r.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(r.pl.n)}</a>${r.a.new?' <span class="newtag">new</span>':""}</td>
+            <td>${esc(r.pl.p||"")}</td><td>${esc(r.a.lvl||"")}</td>
+            <td>${esc(r.ev.need||"")}${r.ev.topPri?` <span class="pritag ${r.ev.topPri}">${r.ev.topPri.toLowerCase()}</span>`:""}</td>
+            <td class="lbl ${r.ev.cls}">${esc(r.ev.label)}</td>
+            <td class="num">${r.a.st==="DFA"&&r.a.days!=null?r.a.days+"d left":r.a.onMarketDays+"d"}</td></tr>`).join("")}
+        </tbody></table></div>`
+      : `<div class="empty">No player on the market answers a flagged need for ${esc(org)} right now.</div>`}
+
+    <h2>New in the last 7 days</h2>
+    ${newOnes.length
+      ? `<div class="tscroll"><table><thead><tr><th>Player</th><th>Pos</th><th>Age</th><th>Level</th><th>WAR</th><th>Sample</th><th>How he got here</th><th>On market</th></tr></thead><tbody>${newOnes.map(boardRow).join("")}</tbody></table></div>`
+      : `<div class="empty">Nobody new hit the market this week.</div>`}
+
+    <h2>Around the league</h2>
+    <p class="note">Everyone currently on the market, best track record first, regardless of whether they fit ${esc(org)}. A club's needs are narrow; the board is not.</p>
+    <div class="tscroll"><table><thead><tr>
+      <th>Player</th><th>Pos</th><th>Age</th><th>Level</th><th>WAR ${D.spanFrom}\u2013${D.window.end.slice(0,4)}</th><th>Sample</th><th>How he got here</th><th>On market</th>
+    </tr></thead><tbody>${board.slice(0,15).map(boardRow).join("")}</tbody></table></div>
+    ${board.length>15?`<p class="note" style="margin-top:8px">${board.length-15} more on the market below this cut.</p>`:""}
+  `;
+
+  // three-line brief in the header
+  document.getElementById("brief").innerHTML = `
+    <ol class="brieflist">
+      <li><span class="bl">Best fit</span><span class="bv">${topFit
+        ? `<b>${esc(topFit.pl.n)}</b>, ${esc(topFit.pl.p||"")}${topFit.a.lvl?", "+esc(topFit.a.lvl):""}. ${esc(topFit.ev.label)} for ${esc(topFit.ev.need||"a need")}.`
+        : `Nobody on the market answers a flagged need.`}</span></li>
+      <li><span class="bl">Best available</span><span class="bv">${topName
+        ? `<b>${esc(topName.n)}</b>, ${esc(topName.p||"")}, ${topName.war!=null?topName.war.toFixed(1)+" WAR since "+D.spanFrom:"no major league record"}. ${esc(topName.st)}.`
+        : `Nobody on the market.`}</span></li>
+      <li><span class="bl">Watch</span><span class="bv">${clocks.length
+        ? `<b>${esc(clocks[0].n)}</b> has ${clocks[0].days} day${clocks[0].days===1?"":"s"} left to claim.`
+        : `${D.newCount} player${D.newCount===1?"":"s"} new to the market this week. No claim window is running.`}</span></li>
+    </ol>`;
+
+  if(need("flagged")) document.getElementById("p-flagged").innerHTML =
+    `<h2>Major league club</h2>
+     <p class="note">Players whose status changed in the last ${D.window.days} days, whose 2026 production supports a need on the ${esc(org)} major league roster.</p>
+     ${renderPlayers(F.mlb,"MLB",F.mlbNeeds)}
+     <h2>Farm system</h2>
+     <p class="note">The same test applied to farm-wide needs. All affiliates are ranked as one system against the other 29.</p>
+     ${renderPlayers(F.farm,"MiLB",F.farmNeeds)}
+     ${renderGone(F.gone)}`;
+
+  // mlb club
+  if(need("mlb")) document.getElementById("p-mlb").innerHTML =
+    `<h2>Major league need areas</h2>
+     <p class="note">A metric is flagged only when the club ranks in the bottom 30% <em>and</em> sits at least half a standard deviation below league average. Rank alone would flag 15 of 30 clubs on every metric.</p>
+     ${needsTable(F.mlbNeeds,"major league")}`;
+
+  if(need("farm")) document.getElementById("p-farm").innerHTML =
+    `<h2>Farm system need areas</h2>
+     <p class="note">All affiliates are combined into one organizational profile and ranked against the other 29 systems. There is no level-by-level breakdown.</p>
+     ${needsTable(F.farmNeeds,"farm")}`;
+
+  // transactions
+  if(need("txns")){
+  let rows = D.txns.filter(t=>{
+    if(S.scopeF && t.sc!==S.scopeF) return false;
+    if(S.typeF && t.ty!==S.typeF) return false;
+    if(S.q){
+      const pl = t.pid?D.players[t.pid]:null;
+      const hay = ((pl?pl.n:"")+" "+(t.org||"")+" "+t.tx).toLowerCase();
+      if(!hay.includes(S.q.toLowerCase())) return false;
+    }
+    return true;
+  }).sort((a,b)=> a.d<b.d ? 1 : a.d>b.d ? -1 : 0);   // newest first
+  const types = [...new Set(D.txns.map(t=>t.ty))].sort();
+  document.getElementById("p-txns").innerHTML =
+    `<h2>All transactions</h2>
+     <p class="note">Every move league-wide in the window. Fit is scored for ${esc(org)} on players who are still on the market.</p>
+     <div class="toolbar">
+       <input id="q" type="search" placeholder="Search player, org, or text" value="${esc(S.q)}" aria-label="Search transactions">
+       <select id="scopeF" aria-label="Filter by scope"><option value="">All scopes</option>
+         ${["MLB","MiLB","Other"].map(s=>`<option ${S.scopeF===s?"selected":""}>${s}</option>`).join("")}</select>
+       <select id="typeF" aria-label="Filter by type"><option value="">All types</option>
+         ${types.map(s=>`<option ${S.typeF===s?"selected":""}>${esc(s)}</option>`).join("")}</select>
+     </div>
+     ${txnTable(rows)}`;
+  }
+
+  // audit
+  const A = D.audit;
+  if(need("audit")) document.getElementById("p-audit").innerHTML =
+    `<h2>Data pull</h2>
+     <p class="note">A single Stats API call covers every club, major and minor. These counts are the health check on that pull.</p>
+     <dl class="kv2">
+       ${[["Transactions",A.txnTotal.toLocaleString()],
+          ["Window",`${D.window.days} days`],
+          ["Unique players",A.players.toLocaleString()],
+          ["Unmapped type",A.unmappedType],
+          ["Missing player ID",A.missingPid],
+          ["Unknown position group",A.unknownGroup],
+          ["Major league scope",A.mlbScope.toLocaleString()],
+          ["Minor league scope",A.milbScope.toLocaleString()],
+          ["Outside affiliated ball",A.otherScope.toLocaleString()],
+          ["Players with MLB stats",A.withMlbStats.toLocaleString()],
+          ["Players with MiLB stats",A.withMilbStats.toLocaleString()],
+          ["Avg MLB needs per club",A.mlbNeedAvg],
+          ["Avg farm needs per org",A.farmNeedAvg],
+         ].map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
+     </dl>
+     <h2>What the counts mean</h2>
+     <p class="note"><b>Outside affiliated ball</b> is high by design. High school workouts, Mexican League, and independent clubs all appear in the feed. They are excluded from need matching rather than silently counted as organizational moves.</p>
+     <p class="note"><b>Unmapped type</b> should stay at or near zero. If it climbs, the API added a transaction typeCode that the mapper does not recognize yet.</p>
+     <p class="note"><b>Avg needs per club</b> is the guardrail on the threshold. Under the old bottom-half rule this sat near 15. If it drifts back up, the z-score cutoff has been loosened.</p>
+     <h2>Market status</h2>
+     <p class="note">Each player's transaction sequence is walked in order, and the last event that changes his market status decides whether he is gettable today. Without this, a player who was designated and then claimed by someone else still reads as a target.</p>
+     <dl class="kv2">
+       ${[["On the market now",A.onMarket],
+          ["Market-opening events",A.marketOpenEvents],
+          ["On a 40-man roster",A.on40man.toLocaleString()],
+          ["DFA window",`${D.dfaWindow} days`],
+         ].map(([k,v])=>`<div><dt>${k}</dt><dd>${v}</dd></div>`).join("")}
+     </dl>
+     <div class="tscroll" style="margin-top:13px"><table><thead><tr><th>Event</th><th>Effect</th></tr></thead><tbody>
+       <tr><td>Designated for assignment</td><td class="w">Opens the market. Clock runs ${D.dfaWindow} days.</td></tr>
+       <tr><td>Released, declared free agency</td><td class="w">Opens the market. No clock.</td></tr>
+       <tr><td>Claimed, signed, traded, selected</td><td class="w">Closes it. Another club already has him.</td></tr>
+       <tr><td>Outrighted</td><td class="w">Closes it. He cleared waivers and stayed in his own organization.</td></tr>
+       <tr><td>Recalled, optioned, activated, assigned</td><td class="w">Roster movement. He was never on the market.</td></tr>
+     </tbody></table></div>
+     <p class="note" style="margin-top:11px">Status is only as good as the window. A player released on the first day of this window may have signed somewhere on day two of the next one. Widen the window and the picture gets more reliable.</p>
+
+     <h2>Where each number comes from</h2>
+     <div class="tscroll"><table><thead><tr><th>Layer</th><th>Source</th><th>Why</th></tr></thead><tbody>
+       <tr><td>Transactions, rosters, positions</td><td>MLB Stats API</td><td class="w">One call covers every club, major and minor, with MLBAM ids attached.</td></tr>
+       <tr><td>Major league club needs</td><td>FanGraphs</td><td class="w">wRC+, FIP, xFIP, DRS and BsR are park and league adjusted. Raw rates are not.</td></tr>
+       <tr><td>Major league player lines</td><td>FanGraphs</td><td class="w">Joined on MLBAM id, so no name matching. Shown with an FG tag.</td></tr>
+       <tr><td>Farm needs and minor league lines</td><td>MLB Stats API</td><td class="w">FanGraphs has no public minor league leaderboard on this path, so the farm side stays unadjusted.</td></tr>
+       <tr><td>Three-year track record</td><td>FanGraphs ${D.spanFrom}&ndash;${D.window.end.slice(0,4)}</td><td class="w">Context for a thin current season. Never the line that gets graded: the need is current, so the evaluation stays current.</td></tr>
+     </tbody></table></div>
+     <p class="note" style="margin-top:11px">That last row is the weakest link. Minor league rates carry no park or level adjustment, so an organization with hitter-friendly affiliates looks better than it is, and a .170 ISO in the complex league is not a .170 ISO in Triple-A.</p>
+
+     <h2>Sample reliability</h2>
+     <p class="note">Rates settle at different speeds. Strikeout rate means something early; on-base, slugging, ERA and WHIP take most of a season. Because only good numbers get flagged, an ungated small sample fills the list with players whose rates look strong precisely because the sample is small.</p>
+     <div class="tscroll"><table><thead><tr><th>Sample</th><th>Treatment</th></tr></thead><tbody>
+       <tr><td>Below ${EVAL_MIN_PA} PA or ${EVAL_MIN_IP} IP</td><td class="w">Not graded at all. Labelled insufficient sample.</td></tr>
+       <tr><td>Under ${Math.round(THIN_FLOOR*100)}% of the stabilization point</td><td class="w">Strength is dropped. It carries too little information to count.</td></tr>
+       <tr><td>Between that and stabilization</td><td class="w">Strength counts but is marked limited, and caps the player at possible match. It can never produce a strong match.</td></tr>
+       <tr><td>At or above stabilization</td><td class="w">Counted in full.</td></tr>
+       <tr><td>Thin, but the three-year line clears the same bar on real sample</td><td class="w">Promoted to a full strength. The sample objection is answered by history rather than by the current season.</td></tr>
+     </tbody></table></div>
+     <p class="note" style="margin-top:11px">Red flags are deliberately not gated this way. Missing a decent player costs less than surfacing a bad one.</p>
+
+     <h2>Why the labels describe rather than grade</h2>
+     <p class="note">Every player who hit the market in 2026 was graded using only his 2024&ndash;2025 line, which was public before the season began, and the outcome read from the transaction feed. Across ${D.backtest?D.backtest.graded:0} gradeable events the labels did not separate players who got picked up from those who did not, on any outcome tested, including waiver claims specifically.</p>
+     ${D.backtest ? `<div class="tscroll"><table><thead><tr><th>Outcome</th><th>Clears needs</th><th>Works against</th><th>p</th></tr></thead><tbody>
+       ${D.backtest.table.map(t=>{
+         const st=t.cells.find(c=>c.label==="Strong"), dn=t.cells.find(c=>c.label==="Does not match");
+         return `<tr><td class="w">${esc(t.outcome)}</td>
+           <td class="num">${st&&st.rate!=null?(st.rate*100).toFixed(1)+"%":"\u2014"}</td>
+           <td class="num">${dn&&dn.rate!=null?(dn.rate*100).toFixed(1)+"%":"\u2014"}</td>
+           <td class="num">${t.p}</td></tr>`;}).join("")}
+     </tbody></table></div>` : ""}
+     <p class="note" style="margin-top:11px">Two caveats keep this from meaning the thresholds are worthless. Every player here had just been cut by an organization that knew his medicals, contract and stuff, so a public stat line is largely redundant with what the market already priced. And the test asked whether a player is good in general, not whether he fits one club's specific hole, which is what the tool actually claims. Testing that needs point-in-time club needs, which this does not have.</p>
+     <p class="note">This is why the labels read "clears 2 of 3 needs" rather than "strong match". The first states what was computed. The second would be a confidence claim nothing here supports.</p>
+
+     <h2>Export</h2>
+     <p class="note">One row per flagged player for ${esc(org)}, with the label, the need, market status and stat line. Keeping these builds the forward record the backtest above had to reconstruct.</p>
+     <p><button class="btn" id="dlflags">Export today's flags as CSV</button></p>
+
+     <h2>How players are ordered</h2>
+     <p class="note">Strongest fits first, then the ones answering the club's most acute gap, then level, then the acquisition clock. Need priority is set by the size of the gap below league average: high at 1.2 standard deviations, medium at 0.8, low below that. There is no hidden composite score behind the label.</p>
+
+     <h2>Need thresholds in force</h2>
+     <p class="note">Rank cutoff: bottom 30%. Gap cutoff: 0.5 SD below league average. Priority: High at 1.2 SD, Medium at 0.8 SD.</p>
+     <h2>Player evaluation thresholds</h2>
+     <div class="tscroll"><table><thead><tr><th>Group</th><th>Supports the need</th><th>Works against it</th></tr></thead><tbody>
+       <tr><td>Pitching</td><td class="w">BB% &le; 8.5, K% &ge; 23, K-BB% &ge; 15, WHIP &le; 1.25, ERA &le; 4.00, HR/9 &le; 1.10</td>
+           <td class="w">BB% &ge; 11, K% &le; 18, K-BB% &le; 8, WHIP &ge; 1.40, ERA &ge; 5.00, HR/9 &ge; 1.50</td></tr>
+       <tr><td>Hitting</td><td class="w">OBP &ge; .330, BB% &ge; 9, K% &le; 22, ISO &ge; .170, OPS &ge; .750, SLG &ge; .400</td>
+           <td class="w">OBP &lt; .300, BB% &lt; 6, K% &ge; 28, ISO &lt; .120, OPS &lt; .650, SLG &lt; .330</td></tr>
+     </tbody></table></div>
+     <p class="note" style="margin-top:11px"><b>A strength only counts when it answers a flagged need. A weakness counts either way.</b> Grading weaknesses against stated needs alone let a pitcher with a 7.81 ERA read as a possible match, purely because his walk rate answered a command need.</p>
+     <p class="note"><b>Minimum sample to grade a line is ${EVAL_MIN_IP} IP or ${EVAL_MIN_PA} PA.</b> Anything thinner is labeled insufficient sample rather than graded. Without this floor, a one-inning shutout scores as a strong match.</p>
+     <p class="note">Thresholds are calibrated to the major leagues and are currently applied to minor league lines as well. A .170 ISO in the Florida Complex League is not a .170 ISO in Triple-A. Level adjustment is the next thing worth building.</p>`;
+
+  document.getElementById("foot").innerHTML =
+    `Sources: MLB Stats API and FanGraphs, pulled ${esc(D.window.end)}. Player names link to mlb.com by MLBAM ID. ` +
+    `Fit labels compare each player's 2026 production against the selected organization's flagged needs. Availability alone never flags a player.`;
+
+  // panel visibility
+  for(const [id] of tabs) document.getElementById("p-"+id).hidden = (S.tab!==id);
+
+  const dl = document.getElementById("dlflags");
+  if(dl) dl.onclick = () => exportFlags(F, org);
+}
+
+function exportFlags(F, org){
+  const hdr = ["run_date","org","scope","player","mlbam_id","position","age","level",
+               "label","need","need_priority","status","days_on_market","on_40man","stat_line"];
+  const line = r => {
+    const L = r.ev.line, s = L && (L.pit||L.hit);
+    const st = !s ? "" : (L.pit
+      ? `IP ${fNum(s.IP,1)} ERA ${fNum(s.ERA,2)} WHIP ${fNum(s.WHIP,2)} K% ${fPct(s.Kp)} BB% ${fPct(s.BBp)}`
+      : `PA ${Math.round(s.PA)} OBP ${fAvg(s.OBP)} SLG ${fAvg(s.SLG)} K% ${fPct(s.Kp)} BB% ${fPct(s.BBp)}`);
+    return [D.window.end, org, r.scope, r.pl.n, r.pid, r.pl.p||"", r.pl.a||"", r.a.lvl||"",
+            r.ev.label, r.ev.need||"", r.ev.topPri||"", r.a.st, r.a.onMarketDays,
+            r.a.on40?"yes":"no", st];
+  };
+  const esc2 = v => { const t=String(v==null?"":v); return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t; };
+  const csv = [hdr.join(","), ...[...F.mlb,...F.farm].map(r=>line(r).map(esc2).join(","))].join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `flags_${org.replace(/\s+/g,"_")}_${D.window.end}.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+/* ---------- events ---------- */
+document.getElementById("tablist").addEventListener("click", e=>{
+  const b = e.target.closest(".tab"); if(!b) return;
+  S.tab = b.dataset.tab; render();
+});
+document.getElementById("tablist").addEventListener("keydown", e=>{
+  if(e.key!=="ArrowRight" && e.key!=="ArrowLeft") return;
+  const tabs=[...document.querySelectorAll(".tab")];
+  const i=tabs.findIndex(t=>t.getAttribute("aria-selected")==="true");
+  const j=(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length;
+  S.tab=tabs[j].dataset.tab; render();
+  document.querySelector('.tab[aria-selected="true"]').focus();
+});
+document.addEventListener("input", e=>{
+  if(e.target.id==="q"){ S.q=e.target.value;
+    const pos=e.target.selectionStart; render();
+    const el=document.getElementById("q"); if(el){el.focus(); el.setSelectionRange(pos,pos);} }
+});
+document.addEventListener("change", e=>{
+  if(e.target.id==="org"){ S.org=e.target.value; render(); }
+  if(e.target.id==="scopeF"){ S.scopeF=e.target.value; render(); }
+  if(e.target.id==="typeF"){ S.typeF=e.target.value; render(); }
+});
+
+/* ---------- boot ---------- */
+(function(){
+  const sel=document.getElementById("org");
+  sel.innerHTML = D.orgs.map(o=>`<option${o==="Pittsburgh Pirates"?" selected":""}>${esc(o)}</option>`).join("");
+  S.org = D.orgs.includes("Pittsburgh Pirates") ? "Pittsburgh Pirates" : D.orgs[0];
+  sel.value = S.org;
+  render();
+})();
+</script>
+</body>
+</html>
