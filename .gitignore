@@ -1,0 +1,24 @@
+# Cached API responses. Rebuildable, large, and never worth committing.
+cache/
+
+# Generated dashboards and payloads
+output/
+
+# R
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+# Python helper venvs / bytecode
+__pycache__/
+*.pyc
+.venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Anything internal. If you ever extend this with club data, keep it out.
+*_internal.*
+private/
