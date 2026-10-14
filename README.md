@@ -51,7 +51,7 @@ caveats.
 ## What it does
 
 - Pulls every transaction league-wide, major and minor, from the MLB Stats API
-- Works out who is **actually gettable today** by walking each player's event
+- Works out who is **actually obtainable today** by walking each player's event
   sequence, so a player who was designated and then claimed drops off the board
 - Runs a claim clock on designations, since that decision expires
 - Flags each club's real weaknesses using rank **and** distance from league
