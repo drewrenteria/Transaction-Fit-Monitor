@@ -1004,8 +1004,8 @@ document.addEventListener("change", e=>{
 /* ---------- boot ---------- */
 (function(){
   const sel=document.getElementById("org");
-  sel.innerHTML = D.orgs.map(o=>`<option${o==="Los Angeles Angels"?" selected":""}>${esc(o)}</option>`).join("");
-  S.org = D.orgs.includes("Los Angeles Angels") ? "Los Angeles Angels" : D.orgs[0];
+  sel.innerHTML = D.orgs.map(o=>`<option${o==="Philadelphia Phillies"?" selected":""}>${esc(o)}</option>`).join("");
+  S.org = D.orgs.includes("Philadelphia Phillies") ? "Philadelphia Phillies" : D.orgs[0];
   sel.value = S.org;
   render();
 })();

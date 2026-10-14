@@ -4,8 +4,9 @@
 
 [![Transaction Fit Monitor](docs/preview.png)](https://drewrenteria.github.io/Transaction-Fit-Monitor/)
 
-*Viewed as the Los Angeles Angels. Pick any of the thirty clubs from the
-dropdown and the whole page re-scores instantly. Rebuilds itself daily.*
+*Pick any of the thirty clubs from the dropdown and the whole page re-scores
+instantly. Rebuilds itself daily, so the live version will have moved on from
+this screenshot.*
 
 There is also a **[point-in-time rebuild of July 4, 2026](https://drewrenteria.github.io/Transaction-Fit-Monitor/snapshot-2026-07-04.html)**,
 frozen mid-season so the claim clocks are live: transactions, FanGraphs rates
