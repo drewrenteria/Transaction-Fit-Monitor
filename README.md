@@ -4,7 +4,7 @@
 
 [![Transaction Fit Monitor](docs/preview.png)](https://drewrenteria.github.io/Transaction-Fit-Monitor/)
 
-*Viewed as the Pittsburgh Pirates. Pick any of the thirty clubs from the
+*Viewed as the Los Angeles Angels. Pick any of the thirty clubs from the
 dropdown and the whole page re-scores instantly. Rebuilds itself daily.*
 
 There is also a **[point-in-time rebuild of July 4, 2026](https://drewrenteria.github.io/Transaction-Fit-Monitor/snapshot-2026-07-04.html)**,
