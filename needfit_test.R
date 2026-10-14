@@ -59,13 +59,22 @@ message("\n[2/4] club needs as of each grid date")
 grid_needs <- needs_as_of(GRID, teams)
 message(sprintf("  %d usable dates", length(grid_needs)))
 
-# --- 3. player lines, prior seasons only -------------------------------------
-# 2024-25 combined. Complete and public before 2026 began, so nothing about a
-# player's grade depends on information that arrived after the acquisition.
-message("\n[3/4] player lines (2024-25, no lookahead)")
-lines <- fetch_fg_players(season = SEASON - 1, season_from = SEASON - 2,
+# --- 3. player lines ---------------------------------------------------------
+# Arm 1: 2024-25 combined. Complete and public before 2026 began.
+# Arm 2/3: the current season bounded to each grid date, which is what the club
+# actually had in front of it. Bounded, so there is no lookahead either way.
+message("\n[3/4] player lines")
+prior <- fetch_fg_players(season = SEASON - 1, season_from = SEASON - 2,
                           tag = "needfit_prior")
-message(sprintf("  %d players with a prior-season line", length(lines)))
+message(sprintf("  arm 1: %d players with a 2024-25 line", length(prior)))
+
+cur_by_date <- list()
+for (d in names(grid_needs)) {
+  cur_by_date[[d]] <- fetch_fg_players(date_to = d,
+                                       tag = paste0("needfit_cur_", gsub("-", "", d)))
+}
+message(sprintf("  arm 2/3: %d dated snapshots, %.0f players each",
+                length(cur_by_date), mean(lengths(cur_by_date))))
 
 people <- fetch_people(unique(acq$mlbam_id))
 bios <- list()
@@ -77,16 +86,53 @@ for (i in seq_len(nrow(people))) {
 message(sprintf("  %d bios", length(bios)))
 
 # --- 4. test -----------------------------------------------------------------
-message("\n[4/4] scoring")
-res <- run_needfit_test(acq, grid_needs, lines, bios)
-message(sprintf("  %d scorable acquisitions", nrow(res)))
+# Arm 3 is the primary test: the only arm that grades a player the way
+# template.html grades him. Pre-registered in the README before this ran.
+message("\n[4/4] scoring, three arms")
+arms <- list(
+  "1. prior season (2024-25)" =
+    run_needfit_test(acq, grid_needs, prior, bios),
+  "2. current season to date" =
+    run_needfit_test(acq, grid_needs, NULL, bios, lines_by_date = cur_by_date),
+  "3. PRIMARY: the page's own rule" =
+    run_needfit_test(acq, grid_needs, NULL, bios, lines_by_date = cur_by_date,
+                     career = prior)
+)
+for (nm in names(arms))
+  message(sprintf("  %-34s %d scorable", nm, nrow(arms[[nm]])))
 
-pt  <- perm_p(res, "pct", "n_clubs")
-pts <- perm_p(res, "pct_strict", "n_with_need")
-cm  <- category_match(res)
+report_arm <- function(nm, r) {
+  pt  <- perm_p(r, "pct", "n_clubs")
+  pts <- perm_p(r, "pct_strict", "n_with_need")
+  cm  <- category_match(r)
+  cat(sprintf("\n%s\n%s\n", nm, strrep("-", nchar(nm))))
+  cat(sprintf("  n = %d  (%d pitchers, %d position)\n",
+              nrow(r), sum(r$is_pit), sum(!r$is_pit)))
+  if (!is.null(cm))
+    cat(sprintf("  category match      acquirer %.4f  base %.4f  lift %+.4f  p %.4f\n",
+                cm$obs, cm$base, cm$obs - cm$base, cm$p_two))
+  if (!is.null(pt))
+    cat(sprintf("  rank, all 30        percentile %.4f   rate %.4f vs %.4f   p %.4f\n",
+                pt$obs, mean(r$acq_rate), mean(r$others_mean), pt$p_two))
+  if (!is.null(pts))
+    cat(sprintf("  rank, needful only  percentile %.4f   (n=%d)   p %.4f\n",
+                pts$obs, pts$n, pts$p_two))
+  invisible(list(pt = pt, pts = pts, cm = cm))
+}
+
+cat("\n", strrep("=", 72), "\n", sep = "")
+cat("ALL THREE ARMS\n")
+cat(strrep("=", 72), "\n", sep = "")
+stats <- list()
+for (nm in names(arms)) stats[[nm]] <- report_arm(nm, arms[[nm]])
+
+res <- arms[[3]]
+pt  <- stats[[3]]$pt
+pts <- stats[[3]]$pts
+cm  <- stats[[3]]$cm
 
 cat("\n", strrep("=", 68), "\n", sep = "")
-cat("NEED-FIT BACKTEST\n")
+cat("PRIMARY TEST — arm 3, the page's own rule\n")
 cat(strrep("=", 68), "\n\n", sep = "")
 cat(sprintf("Acquisitions scored            %d\n", nrow(res)))
 cat(sprintf("  pitchers                     %d\n", sum(res$is_pit)))

@@ -84,7 +84,12 @@ THIN_FLOOR  <- 0.6
 #' @param line named list of rates (the FanGraphs bat or pit record)
 #' @param is_pit TRUE for a pitcher
 #' @param needs  that club's flagged needs, as build_needs returns them
-clear_rate <- function(line, is_pit, needs) {
+#' @param career optional prior-season line. Supplying it switches to the
+#'   page's own rule (arm 3): a thin current sample counts only when the career
+#'   line clears the same bar on real sample. Faithful to `evaluate()` in
+#'   template.html, where career upgrades a thin hit to a solid one but never
+#'   rescues a dropped metric and never substitutes for a failing current value.
+clear_rate <- function(line, is_pit, needs, career = NULL) {
   cats <- if (is_pit) "Pitching" else c("Hitting", "Defense", "Baserunning")
   rel  <- Filter(function(n) n$cat %in% cats, needs)
   if (length(rel) == 0)
@@ -93,6 +98,7 @@ clear_rate <- function(line, is_pit, needs) {
   POS      <- if (is_pit) PIT_POS else HIT_POS
   RELIABLE <- if (is_pit) RELIABLE_IP else RELIABLE_PA
   sample   <- if (is_pit) n0(line$IP) else n0(line$PA)
+  car_n    <- if (is.null(career)) 0 else if (is_pit) n0(career$IP) else n0(career$PA)
 
   seen <- character(0); cleared <- 0L; counted <- 0L
   for (n in rel) {
@@ -103,11 +109,21 @@ clear_rate <- function(line, is_pit, needs) {
     v <- line[[key]]
     if (is.null(v) || is.na(v)) next
     if (is.null(POS[[key]])) next
-    # same two-tier reliability rule the page uses: a rate counts once the
-    # sample is within THIN_FLOOR of where that metric stabilizes
+    if (!isTRUE(POS[[key]](v))) next          # current value must clear
+
     floor_n <- unname(RELIABLE[key]); if (is.na(floor_n)) floor_n <- 0
-    if (sample < floor_n * THIN_FLOOR) next
-    if (isTRUE(POS[[key]](v))) cleared <- cleared + 1L
+    if (sample >= floor_n) {
+      cleared <- cleared + 1L                 # solid on its own
+    } else if (sample >= floor_n * THIN_FLOOR) {
+      if (is.null(career)) {
+        cleared <- cleared + 1L               # arms 1 and 2: thin still counts
+      } else {
+        cv <- career[[key]]                   # arm 3: only if history backs it
+        if (!is.null(cv) && !is.na(cv) && car_n >= floor_n && isTRUE(POS[[key]](cv)))
+          cleared <- cleared + 1L
+      }
+    }
+    # below THIN_FLOOR of the stabilization point the rate is dropped outright
   }
   if (counted == 0)
     return(list(rate = 0, rate_strict = NA_real_, cleared = 0L, n = 0L))
@@ -188,21 +204,32 @@ nearest_grid <- function(d, grid) {
 #' For each acquisition, rank the acquiring club's clear-rate among all 30.
 #' Ties share the average rank, so a player who answers nobody's needs (or
 #' everybody's) lands at 0.50 rather than counting as evidence either way.
-run_needfit_test <- function(acq, needs_grid, lines, bios, n_perm = 10000L) {
+#' @param lines      named list of player lines to grade on
+#' @param lines_by_date for arm 2 and 3: grid date -> player lines as of that
+#'   date. When supplied it overrides `lines` as the primary record.
+#' @param career     for arm 3: prior-season lines used to back a thin sample
+run_needfit_test <- function(acq, needs_grid, lines, bios,
+                             lines_by_date = NULL, career = NULL) {
   recs <- list()
   for (i in seq_len(nrow(acq))) {
     a <- acq[i, ]
     ng <- needs_grid[[a$grid]]; if (is.null(ng)) next
     pid <- as.character(a$mlbam_id)
-    pl  <- lines[[pid]]; if (is.null(pl)) next
+    src <- if (!is.null(lines_by_date)) lines_by_date[[a$grid]] else lines
+    pl  <- src[[pid]]; if (is.null(pl)) next
     bio <- bios[[pid]]
     is_pit <- identical(bio$group, "Pitching")
     line <- if (is_pit) pl$pit else pl$bat
     if (is.null(line)) next
+    car <- NULL
+    if (!is.null(career)) {
+      cp <- career[[pid]]
+      car <- if (is.null(cp)) NULL else if (is_pit) cp$pit else cp$bat
+    }
 
     clubs <- names(ng)
     if (!(a$acquirer %in% clubs)) next
-    scored <- lapply(clubs, function(cl) clear_rate(line, is_pit, ng[[cl]]))
+    scored <- lapply(clubs, function(cl) clear_rate(line, is_pit, ng[[cl]], car))
     names(scored) <- clubs
     r  <- vapply(scored, function(s) s$rate, numeric(1))
     rs <- vapply(scored, function(s) s$rate_strict, numeric(1))

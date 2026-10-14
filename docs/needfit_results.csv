@@ -1,226 +1,182 @@
 "mlbam_id","name","acquirer","from","date","how","is_pit","acq_rate","others_mean","pct","pct_strict","acq_has_need","n_with_need","n_clubs"
-457705,"Andrew McCutchen","Atlanta Braves","Texas Rangers",2026-07-02,"Signed",FALSE,0.333333333333333,0.114942528735632,0.833333333333333,0.814814814814815,TRUE,27,30
-467793,"Carlos Santana","Atlanta Braves","Arizona Diamondbacks",2026-06-28,"Signed",FALSE,0.333333333333333,0.123563218390805,0.833333333333333,0.814814814814815,TRUE,27,30
-502054,"Tommy Pham","Baltimore Orioles","New York Mets",2026-05-16,"Signed",FALSE,0.333333333333333,0.13448275862069,0.816666666666667,0.78,TRUE,25,30
-502054,"Tommy Pham","Philadelphia Phillies","Baltimore Orioles",2026-06-27,"Signed",FALSE,0,0.135057471264368,0.316666666666667,0.296296296296296,TRUE,27,30
-518886,"Craig Kimbrel","Tampa Bay Rays","New York Mets",2026-05-26,"Signed",TRUE,1,0.137931034482759,0.95,0.90625,TRUE,16,30
-518886,"Craig Kimbrel","Kansas City Royals","Tampa Bay Rays",2026-08-10,"Signed",TRUE,0.5,0.155172413793103,0.833333333333333,0.6875,TRUE,16,30
-519141,"Drew Pomeranz","Chicago Cubs","Los Angeles Angels",2026-06-22,"Signed",TRUE,1,0.517241379310345,0.733333333333333,0.5,TRUE,16,30
-542194,"Christian Bethancourt","New York Yankees","Chicago Cubs",2026-07-28,"Signed",FALSE,0,0.181034482758621,0.283333333333333,0.24,TRUE,25,30
-545341,"Randal Grichuk","Chicago White Sox","New York Yankees",2026-05-04,"Signed",FALSE,1,0.474712643678161,0.883333333333333,0.875,TRUE,28,30
-547179,"Michael Lorenzen","Toronto Blue Jays","Colorado Rockies",2026-08-27,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
-553869,"Elias D<U+00ED>az","Texas Rangers","Kansas City Royals",2026-06-06,"Signed",FALSE,0,0.0913793103448276,0.35,0.339285714285714,TRUE,28,30
-571948,"Hoby Milner","Seattle Mariners","Chicago Cubs",2026-09-01,"Signed",TRUE,0,0.413793103448276,0.25,NA,FALSE,17,30
-592426,"Luke Jackson","Kansas City Royals","New York Mets",2026-05-22,"Signed",TRUE,0,0.0862068965517241,0.433333333333333,0.375,TRUE,16,30
-592791,"Jameson Taillon","Toronto Blue Jays","Chicago Cubs",2026-08-02,"Trade",TRUE,1,0.189655172413793,0.933333333333333,0.875,TRUE,16,30
+457705,"Andrew McCutchen","Atlanta Braves","Texas Rangers",2026-07-02,"Signed",FALSE,0.333333333333333,0.0431034482758621,0.95,0.944444444444444,TRUE,27,30
+467793,"Carlos Santana","Atlanta Braves","Arizona Diamondbacks",2026-06-28,"Signed",FALSE,0,0,0.5,0.5,TRUE,27,30
+502054,"Tommy Pham","Baltimore Orioles","New York Mets",2026-05-16,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
+502054,"Tommy Pham","Philadelphia Phillies","Baltimore Orioles",2026-06-27,"Signed",FALSE,0,0,0.5,0.5,TRUE,27,30
+518886,"Craig Kimbrel","Tampa Bay Rays","New York Mets",2026-05-26,"Signed",TRUE,1,0.103448275862069,0.966666666666667,0.9375,TRUE,16,30
+518886,"Craig Kimbrel","Kansas City Royals","Tampa Bay Rays",2026-08-10,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+519141,"Drew Pomeranz","Chicago Cubs","Los Angeles Angels",2026-06-22,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+545341,"Randal Grichuk","Chicago White Sox","New York Yankees",2026-05-04,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+547179,"Michael Lorenzen","Toronto Blue Jays","Colorado Rockies",2026-08-27,"Signed",TRUE,1,0.120689655172414,0.966666666666667,0.941176470588235,TRUE,17,30
+553869,"Elias D<U+00ED>az","Texas Rangers","Kansas City Royals",2026-06-06,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+571948,"Hoby Milner","Seattle Mariners","Chicago Cubs",2026-09-01,"Signed",TRUE,0,0.172413793103448,0.383333333333333,NA,FALSE,17,30
+592791,"Jameson Taillon","Toronto Blue Jays","Chicago Cubs",2026-08-02,"Trade",TRUE,1,0.103448275862069,0.966666666666667,0.9375,TRUE,16,30
+592826,"Vince Velasquez","Kansas City Royals","Chicago Cubs",2026-07-10,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
 592836,"Taijuan Walker","Los Angeles Angels","Philadelphia Phillies",2026-05-25,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-592866,"Trevor Williams","Texas Rangers","Washington Nationals",2026-09-01,"Signed",TRUE,0,0.327586206896552,0.3,NA,FALSE,17,30
-594835,"Marco Gonzales","Texas Rangers","San Diego Padres",2026-06-23,"Signed",TRUE,0,0.103448275862069,0.4,0.3125,TRUE,16,30
-596103,"Austin Slater","New York Mets","Miami Marlins",2026-04-27,"Signed",FALSE,0,0.0568965517241379,0.416666666666667,0.410714285714286,TRUE,28,30
-596103,"Austin Slater","Tampa Bay Rays","New York Mets",2026-05-27,"Signed",FALSE,0,0.0528735632183908,0.433333333333333,0.428571428571429,TRUE,28,30
-596271,"Casey Lawrence","Philadelphia Phillies","Seattle Mariners",2026-08-14,"Signed",TRUE,0,0,0.5,NA,FALSE,17,30
-596295,"Austin Gomber","Atlanta Braves","Texas Rangers",2026-05-16,"Signed",TRUE,0,0.0862068965517241,0.416666666666667,NA,FALSE,18,30
-596295,"Austin Gomber","Detroit Tigers","Atlanta Braves",2026-08-05,"Signed",TRUE,0,0.137931034482759,0.4,NA,FALSE,16,30
-605130,"Scott Barlow","Kansas City Royals","Athletics",2026-07-01,"Signed",TRUE,0.5,0.189655172413793,0.8,0.625,TRUE,16,30
-605154,"John Brebbia","Boston Red Sox","Colorado Rockies",2026-08-07,"Signed",TRUE,0,0.120689655172414,0.416666666666667,NA,FALSE,16,30
+592866,"Trevor Williams","Texas Rangers","Washington Nationals",2026-09-01,"Signed",TRUE,0,0.120689655172414,0.416666666666667,NA,FALSE,17,30
+596103,"Austin Slater","New York Mets","Miami Marlins",2026-04-27,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+596103,"Austin Slater","Tampa Bay Rays","New York Mets",2026-05-27,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+605130,"Scott Barlow","Kansas City Royals","Athletics",2026-07-01,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+605154,"John Brebbia","Boston Red Sox","Colorado Rockies",2026-08-07,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
 605218,"Carl Edwards Jr.","Detroit Tigers","New York Mets",2026-05-08,"Signed",TRUE,0,0,0.5,NA,FALSE,18,30
-605242,"Michael Fulmer","Los Angeles Angels","San Francisco Giants",2026-08-11,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-605242,"Michael Fulmer","New York Yankees","Los Angeles Angels",2026-08-26,"Signed",TRUE,0,0,0.5,NA,FALSE,17,30
-605447,"Jordan Romano","Colorado Rockies","Los Angeles Angels",2026-05-06,"Signed",TRUE,0.5,0.137931034482759,0.85,0.735294117647059,TRUE,17,30
-605452,"Joe Ross","Texas Rangers","Arizona Diamondbacks",2026-05-22,"Signed",TRUE,0,0.0862068965517241,0.433333333333333,NA,FALSE,16,30
-606115,"Orlando Arcia","Cincinnati Reds","Minnesota Twins",2026-09-01,"Signed",FALSE,0.333333333333333,0.15632183908046,0.816666666666667,0.788461538461538,TRUE,26,30
-606992,"Eric Haase","Chicago White Sox","San Francisco Giants",2026-07-28,"Signed",FALSE,0,0.275862068965517,0.233333333333333,0.18,TRUE,25,30
-606992,"Eric Haase","Atlanta Braves","Chicago White Sox",2026-09-01,"Signed",FALSE,0,0.311494252873563,0.233333333333333,0.192307692307692,TRUE,26,30
-607481,"Aaron Bummer","Chicago Cubs","Atlanta Braves",2026-06-01,"Signed",TRUE,1,0.431034482758621,0.816666666666667,0.65625,TRUE,16,30
-607481,"Aaron Bummer","Kansas City Royals","Chicago Cubs",2026-07-21,"Signed",TRUE,0.5,0.46551724137931,0.533333333333333,0.125,TRUE,16,30
+605447,"Jordan Romano","Colorado Rockies","Los Angeles Angels",2026-05-06,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
+605452,"Joe Ross","Texas Rangers","Arizona Diamondbacks",2026-05-22,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
+606115,"Orlando Arcia","Cincinnati Reds","Minnesota Twins",2026-09-01,"Signed",FALSE,0.333333333333333,0.0747126436781609,0.85,0.826923076923077,TRUE,26,30
+606992,"Eric Haase","Chicago White Sox","San Francisco Giants",2026-07-28,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
+606992,"Eric Haase","Atlanta Braves","Chicago White Sox",2026-09-01,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
+607481,"Aaron Bummer","Chicago Cubs","Atlanta Braves",2026-06-01,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+607481,"Aaron Bummer","Kansas City Royals","Chicago Cubs",2026-07-21,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
 608566,"Germ<U+00E1>n M<U+00E1>rquez","Minnesota Twins","San Diego Padres",2026-08-13,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-608723,"Austin Voth","Minnesota Twins","Toronto Blue Jays",2026-06-04,"Signed",TRUE,1,0.362068965517241,0.816666666666667,0.65625,TRUE,16,30
-621199,"Matt Bowman","Toronto Blue Jays","Minnesota Twins",2026-05-27,"Signed",TRUE,0,0.103448275862069,0.4,NA,FALSE,16,30
-621199,"Matt Bowman","Minnesota Twins","Toronto Blue Jays",2026-07-08,"Signed",TRUE,0,0.120689655172414,0.4,0.3,TRUE,15,30
-621366,"Ryan Borucki","Cleveland Guardians","San Francisco Giants",2026-08-04,"Signed",TRUE,0,0.0517241379310345,0.45,NA,FALSE,16,30
-621512,"Tom<U+00E1>s Nido","Boston Red Sox","Detroit Tigers",2026-08-28,"Signed",FALSE,0,0.0816091954022989,0.35,NA,FALSE,26,30
-622268,"Donovan Walton","Athletics","Los Angeles Angels",2026-07-12,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
-622569,"Pablo Reyes","Los Angeles Angels","San Diego Padres",2026-07-08,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
+608723,"Austin Voth","Minnesota Twins","Toronto Blue Jays",2026-06-04,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+621366,"Ryan Borucki","Cleveland Guardians","San Francisco Giants",2026-08-04,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
+622268,"Donovan Walton","Athletics","Los Angeles Angels",2026-07-12,"Claimed",FALSE,0,0.118965517241379,0.366666666666667,0.346153846153846,TRUE,26,30
 622761,"Jorge Mateo","Tampa Bay Rays","Atlanta Braves",2026-08-13,"Signed",FALSE,0,0.0913793103448276,0.333333333333333,0.307692307692308,TRUE,26,30
-623149,"Paul Sewald","Toronto Blue Jays","Arizona Diamondbacks",2026-08-12,"Claimed",TRUE,1,0.258620689655172,0.9,0.8125,TRUE,16,30
-623168,"Tyler Heineman","Los Angeles Angels","Toronto Blue Jays",2026-06-17,"Trade",FALSE,0.6,0.491954022988506,0.566666666666667,0.535714285714286,TRUE,28,30
-623437,"Justin Topa","Toronto Blue Jays","Minnesota Twins",2026-05-30,"Signed",TRUE,0,0.327586206896552,0.3,NA,FALSE,16,30
-623437,"Justin Topa","Kansas City Royals","Toronto Blue Jays",2026-07-07,"Signed",TRUE,0.5,0.344827586206897,0.65,0.3,TRUE,15,30
-623437,"Justin Topa","New York Yankees","Kansas City Royals",2026-08-14,"Signed",TRUE,0,0.431034482758621,0.25,NA,FALSE,17,30
-628451,"Andy Ib<U+00E1><U+00F1>ez","New York Mets","Athletics",2026-04-30,"Claimed",FALSE,0,0.258045977011494,0.266666666666667,0.25,TRUE,28,30
-628451,"Andy Ib<U+00E1><U+00F1>ez","Seattle Mariners","New York Mets",2026-08-18,"Signed",FALSE,0.166666666666667,0.166666666666667,0.583333333333333,0.5,TRUE,25,30
+623149,"Paul Sewald","Toronto Blue Jays","Arizona Diamondbacks",2026-08-12,"Claimed",TRUE,1,0.224137931034483,0.916666666666667,0.84375,TRUE,16,30
+623168,"Tyler Heineman","Los Angeles Angels","Toronto Blue Jays",2026-06-17,"Trade",FALSE,0,0,0.5,0.5,TRUE,28,30
+623437,"Justin Topa","Toronto Blue Jays","Minnesota Twins",2026-05-30,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
+623437,"Justin Topa","Kansas City Royals","Toronto Blue Jays",2026-07-07,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
+623437,"Justin Topa","New York Yankees","Kansas City Royals",2026-08-14,"Signed",TRUE,0,0,0.5,NA,FALSE,17,30
+628451,"Andy Ib<U+00E1><U+00F1>ez","New York Mets","Athletics",2026-04-30,"Claimed",FALSE,0,0,0.5,0.5,TRUE,28,30
+628451,"Andy Ib<U+00E1><U+00F1>ez","Seattle Mariners","New York Mets",2026-08-18,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
 640454,"Matt Krook","Washington Nationals","Athletics",2026-07-04,"Claimed",TRUE,0,0,0.5,0.5,TRUE,15,30
 641585,"J.P. France","San Diego Padres","Houston Astros",2026-08-04,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
 641598,"Mitch Garver","New York Yankees","Seattle Mariners",2026-08-08,"Signed",FALSE,0,0.078735632183908,0.4,0.384615384615385,TRUE,26,30
-641680,"Jonah Heim","Athletics","Atlanta Braves",2026-05-04,"Trade",FALSE,0.5,0.240804597701149,0.85,0.839285714285714,TRUE,28,30
-641703,"Brent Honeywell","San Diego Padres","San Francisco Giants",2026-08-14,"Signed",TRUE,0,0.344827586206897,0.266666666666667,NA,FALSE,17,30
+641680,"Jonah Heim","Athletics","Atlanta Braves",2026-05-04,"Trade",FALSE,0,0,0.5,0.5,TRUE,28,30
 641755,"Tyler Kinley","Detroit Tigers","Atlanta Braves",2026-08-24,"Signed",TRUE,0,0.103448275862069,0.433333333333333,NA,FALSE,17,30
-641778,"Eric Lauer","Los Angeles Dodgers","Toronto Blue Jays",2026-05-17,"Trade",TRUE,0,0.344827586206897,0.266666666666667,NA,FALSE,18,30
-641793,"Zack Littell","Arizona Diamondbacks","Washington Nationals",2026-08-10,"Signed",TRUE,0,0.224137931034483,0.35,0.21875,TRUE,16,30
+641778,"Eric Lauer","Los Angeles Dodgers","Toronto Blue Jays",2026-05-17,"Trade",TRUE,0,0,0.5,NA,FALSE,18,30
+641793,"Zack Littell","Arizona Diamondbacks","Washington Nationals",2026-08-10,"Signed",TRUE,0,0.137931034482759,0.4,0.3125,TRUE,16,30
 642020,"Chuckie Robinson","Atlanta Braves","Los Angeles Dodgers",2026-08-18,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
-642136,"Matt Thaiss","Houston Astros","Boston Red Sox",2026-07-24,"Signed",FALSE,0,0.123563218390805,0.333333333333333,0.3,TRUE,25,30
-642152,"Lou Trivino III","Baltimore Orioles","Philadelphia Phillies",2026-05-04,"Signed",TRUE,0,0.0689655172413793,0.45,NA,FALSE,17,30
-642152,"Lou Trivino III","Philadelphia Phillies","Baltimore Orioles",2026-05-16,"Signed",TRUE,0.5,0.0517241379310345,0.933333333333333,0.888888888888889,TRUE,18,30
-642215,"Weston Wilson","Seattle Mariners","Baltimore Orioles",2026-06-14,"Signed",FALSE,0,0.192528735632184,0.366666666666667,0.357142857142857,TRUE,28,30
-642546,"Jonathan Hern<U+00E1>ndez","Los Angeles Dodgers","Philadelphia Phillies",2026-05-18,"Signed",TRUE,0,0,0.5,NA,FALSE,18,30
-642701,"Dennis Santana","Arizona Diamondbacks","Pittsburgh Pirates",2026-08-05,"Signed",TRUE,0.5,0.482758620689655,0.516666666666667,0.09375,TRUE,16,30
-642851,"Austin Wynns","Los Angeles Angels","Athletics",2026-05-16,"Signed",FALSE,0.2,0.416091954022988,0.316666666666667,0.18,TRUE,25,30
-642851,"Austin Wynns","Texas Rangers","Atlanta Braves",2026-06-23,"Signed",FALSE,1,0.433908045977011,0.866666666666667,0.851851851851852,TRUE,27,30
+642152,"Lou Trivino III","Philadelphia Phillies","Baltimore Orioles",2026-05-16,"Signed",TRUE,0,0,0.5,0.5,TRUE,18,30
+642215,"Weston Wilson","Seattle Mariners","Baltimore Orioles",2026-06-14,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+642701,"Dennis Santana","Arizona Diamondbacks","Pittsburgh Pirates",2026-08-05,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
+642851,"Austin Wynns","Los Angeles Angels","Athletics",2026-05-16,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
+642851,"Austin Wynns","Texas Rangers","Atlanta Braves",2026-06-23,"Signed",FALSE,0,0,0.5,0.5,TRUE,27,30
 644433,"Chadwick Tromp","Los Angeles Dodgers","Baltimore Orioles",2026-08-13,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
-645444,"Jose Herrera","Pittsburgh Pirates","Texas Rangers",2026-09-01,"Signed",FALSE,0.5,0.147701149425287,0.9,0.884615384615385,TRUE,26,30
-647315,"Zach Pop","Miami Marlins","Philadelphia Phillies",2026-06-12,"Signed",TRUE,0,0.0689655172413793,0.433333333333333,NA,FALSE,15,30
+647315,"Zach Pop","Miami Marlins","Philadelphia Phillies",2026-06-12,"Signed",TRUE,0,0,0.5,NA,FALSE,15,30
 650644,"Aaron Civale","Chicago Cubs","Athletics",2026-07-18,"Trade",TRUE,0,0.0862068965517241,0.416666666666667,0.34375,TRUE,16,30
-650859,"Luis Rengifo","San Diego Padres","Milwaukee Brewers",2026-06-29,"Signed",FALSE,0,0.181034482758621,0.266666666666667,0.240740740740741,TRUE,27,30
-650893,"G<U+00E9>nesis Cabrera","Kansas City Royals","Philadelphia Phillies",2026-05-26,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-650968,"Yohel Pozo","Baltimore Orioles","St. Louis Cardinals",2026-07-23,"Claimed",FALSE,0.333333333333333,0.181034482758621,0.783333333333333,0.74,TRUE,25,30
-656186,"Dan Altavilla","Kansas City Royals","Minnesota Twins",2026-05-29,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-656240,"Scott Blewett","Athletics","St. Louis Cardinals",2026-07-26,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
-656413,"Stuart Fairchild","Seattle Mariners","Cleveland Guardians",2026-07-05,"Signed",FALSE,0.2,0.194827586206897,0.516666666666667,0.442307692307692,TRUE,26,30
-657265,"Peter Strzelecki","New York Yankees","Milwaukee Brewers",2026-05-23,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
-657265,"Peter Strzelecki","Milwaukee Brewers","New York Yankees",2026-06-24,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
-657265,"Peter Strzelecki","St. Louis Cardinals","Milwaukee Brewers",2026-07-25,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-657557,"Paul DeJong","Detroit Tigers","New York Yankees",2026-05-05,"Signed",FALSE,0.333333333333333,0.28448275862069,0.7,0.678571428571429,TRUE,28,30
+650859,"Luis Rengifo","San Diego Padres","Milwaukee Brewers",2026-06-29,"Signed",FALSE,0,0.135057471264368,0.316666666666667,0.296296296296296,TRUE,27,30
+650968,"Yohel Pozo","Baltimore Orioles","St. Louis Cardinals",2026-07-23,"Claimed",FALSE,0,0,0.5,0.5,TRUE,25,30
+656212,"Charlie Barnes","Los Angeles Dodgers","Chicago Cubs",2026-05-09,"Claimed",TRUE,0,0,0.5,NA,FALSE,18,30
+656413,"Stuart Fairchild","Seattle Mariners","Cleveland Guardians",2026-07-05,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
 657756,"Connor Seabold","Toronto Blue Jays","Detroit Tigers",2026-05-27,"Trade",TRUE,0,0,0.5,NA,FALSE,16,30
 657756,"Connor Seabold","Kansas City Royals","Toronto Blue Jays",2026-06-15,"Trade",TRUE,0,0,0.5,0.5,TRUE,15,30
-660761,"Jos<U+00E9> Suarez","Seattle Mariners","Atlanta Braves",2026-05-03,"Claimed",TRUE,0,0.155172413793103,0.383333333333333,NA,FALSE,17,30
-660761,"Jos<U+00E9> Suarez","Athletics","Seattle Mariners",2026-05-14,"Trade",TRUE,0,0.172413793103448,0.4,0.333333333333333,TRUE,18,30
-660821,"Jes<U+00FA>s S<U+00E1>nchez","Arizona Diamondbacks","Toronto Blue Jays",2026-09-14,"Claimed",FALSE,0,0.181609195402299,0.283333333333333,0.24,TRUE,25,30
-663330,"Jahmai Jones","Boston Red Sox","Detroit Tigers",2026-07-14,"Trade",FALSE,1,0.48735632183908,0.85,0.826923076923077,TRUE,26,30
+660761,"Jos<U+00E9> Suarez","Seattle Mariners","Atlanta Braves",2026-05-03,"Claimed",TRUE,0,0,0.5,NA,FALSE,17,30
+660761,"Jos<U+00E9> Suarez","Athletics","Seattle Mariners",2026-05-14,"Trade",TRUE,0,0,0.5,0.5,TRUE,18,30
+660821,"Jes<U+00FA>s S<U+00E1>nchez","Arizona Diamondbacks","Toronto Blue Jays",2026-09-14,"Claimed",FALSE,0,0.0816091954022989,0.416666666666667,0.4,TRUE,25,30
+663330,"Jahmai Jones","Boston Red Sox","Detroit Tigers",2026-07-14,"Trade",FALSE,0.5,0.035632183908046,0.983333333333333,0.980769230769231,TRUE,26,30
 663362,"Matt Waldron","Toronto Blue Jays","San Diego Padres",2026-08-05,"Claimed",TRUE,1,0.103448275862069,0.966666666666667,0.9375,TRUE,16,30
 663362,"Matt Waldron","Washington Nationals","Toronto Blue Jays",2026-08-22,"Claimed",TRUE,0,0.155172413793103,0.383333333333333,0.294117647058824,TRUE,17,30
-663455,"Konnor Pilkington","Washington Nationals","Detroit Tigers",2026-07-02,"Signed",TRUE,0,0.120689655172414,0.416666666666667,0.34375,TRUE,16,30
-663465,"Kolby Allard","Philadelphia Phillies","Cleveland Guardians",2026-06-18,"Signed",TRUE,0,0.275862068965517,0.3,NA,FALSE,15,30
+663465,"Kolby Allard","Philadelphia Phillies","Cleveland Guardians",2026-06-18,"Signed",TRUE,0,0,0.5,NA,FALSE,15,30
 663611,"Nick Madrigal","Tampa Bay Rays","Los Angeles Angels",2026-06-26,"Signed",FALSE,0,0.0804597701149425,0.4,0.388888888888889,TRUE,27,30
-663765,"Jake Woodford","Chicago Cubs","Milwaukee Brewers",2026-07-04,"Signed",TRUE,0,0.120689655172414,0.4,0.3,TRUE,15,30
+663765,"Jake Woodford","Chicago Cubs","Milwaukee Brewers",2026-07-04,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
 663765,"Jake Woodford","Tampa Bay Rays","Chicago Cubs",2026-08-11,"Signed",TRUE,0,0.137931034482759,0.4,NA,FALSE,16,30
 663878,"Nate Pearson","Kansas City Royals","Houston Astros",2026-07-22,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
 663978,"Chris Paddack","Cincinnati Reds","Miami Marlins",2026-05-13,"Signed",TRUE,0.5,0.0689655172413793,0.916666666666667,0.861111111111111,TRUE,18,30
 663978,"Chris Paddack","Texas Rangers","Cincinnati Reds",2026-06-29,"Signed",TRUE,0,0.103448275862069,0.4,0.3125,TRUE,16,30
-664059,"Sam Haggerty","Cincinnati Reds","Texas Rangers",2026-06-13,"Signed",FALSE,0.333333333333333,0.273563218390805,0.65,0.625,TRUE,28,30
-664123,"Scott Effross","Seattle Mariners","Detroit Tigers",2026-08-12,"Signed",TRUE,0,0,0.5,NA,FALSE,16,30
+664059,"Sam Haggerty","Cincinnati Reds","Texas Rangers",2026-06-13,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
 664353,"Jos<U+00E9> Urquidy","Chicago White Sox","Pittsburgh Pirates",2026-07-26,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
 664353,"Jos<U+00E9> Urquidy","Philadelphia Phillies","Chicago White Sox",2026-09-17,"Claimed",TRUE,0,0,0.5,NA,FALSE,19,30
-664774,"LaMonte Wade Jr.","Houston Astros","Chicago White Sox",2026-06-04,"Signed",FALSE,0,0.117241379310345,0.383333333333333,0.375,TRUE,28,30
-664874,"Seby Zavala","Detroit Tigers","Los Angeles Dodgers",2026-08-06,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
-664875,"Justin Lawrence","Minnesota Twins","Pittsburgh Pirates",2026-06-02,"Trade",TRUE,0,0.0862068965517241,0.433333333333333,0.375,TRUE,16,30
-664875,"Justin Lawrence","Washington Nationals","Minnesota Twins",2026-06-24,"Claimed",TRUE,0.5,0.0689655172413793,0.916666666666667,0.84375,TRUE,16,30
-665828,"Oswaldo Cabrera","Cincinnati Reds","New York Yankees",2026-09-18,"Claimed",FALSE,0.25,0.148850574712644,0.7,0.64,TRUE,25,30
-666149,"Tyler Fitzgerald","Los Angeles Dodgers","Toronto Blue Jays",2026-04-28,"Trade",FALSE,0,0.455747126436782,0.133333333333333,0.107142857142857,TRUE,28,30
-666150,"Dominic Fletcher","Cincinnati Reds","Pittsburgh Pirates",2026-09-03,"Signed",FALSE,0.333333333333333,0.15632183908046,0.816666666666667,0.788461538461538,TRUE,26,30
+664875,"Justin Lawrence","Minnesota Twins","Pittsburgh Pirates",2026-06-02,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
+664875,"Justin Lawrence","Washington Nationals","Minnesota Twins",2026-06-24,"Claimed",TRUE,0,0.120689655172414,0.416666666666667,0.34375,TRUE,16,30
+665828,"Oswaldo Cabrera","Cincinnati Reds","New York Yankees",2026-09-18,"Claimed",FALSE,0,0,0.5,0.5,TRUE,25,30
 666185,"Dylan Carlson","Philadelphia Phillies","Chicago Cubs",2026-05-12,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
-666197,"Grae Kessinger","Pittsburgh Pirates","New York Mets",2026-07-08,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
-666624,"Christopher Morel","New York Mets","Miami Marlins",2026-07-01,"Signed",FALSE,0,0.0545977011494253,0.416666666666667,0.407407407407407,TRUE,27,30
-666808,"Camilo Doval","San Francisco Giants","Pittsburgh Pirates",2026-09-24,"Claimed",TRUE,0.5,0.379310344827586,0.616666666666667,0.394736842105263,TRUE,19,30
-667463,"John King","Texas Rangers","Miami Marlins",2026-08-31,"Signed",TRUE,0,0.362068965517241,0.266666666666667,NA,FALSE,17,30
-668472,"Nick Pratto","San Diego Padres","Texas Rangers",2026-06-10,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
-668670,"Jake Rogers","Baltimore Orioles","Detroit Tigers",2026-07-30,"Trade",FALSE,0,0.0804597701149425,0.35,0.32,TRUE,25,30
-668670,"Jake Rogers","Chicago White Sox","Boston Red Sox",2026-08-14,"Claimed",FALSE,0,0.0862068965517241,0.35,0.32,TRUE,25,30
-668800,"Andrew Knizner","Boston Red Sox","Colorado Rockies",2026-06-23,"Signed",FALSE,0,0.169540229885057,0.3,0.277777777777778,TRUE,27,30
-668800,"Andrew Knizner","San Francisco Giants","Boston Red Sox",2026-08-11,"Signed",FALSE,0.25,0.177586206896552,0.7,0.653846153846154,TRUE,26,30
+666624,"Christopher Morel","New York Mets","Miami Marlins",2026-07-01,"Signed",FALSE,0,0,0.5,0.5,TRUE,27,30
+666808,"Camilo Doval","San Francisco Giants","Pittsburgh Pirates",2026-09-24,"Claimed",TRUE,0.5,0.0862068965517241,0.9,0.842105263157895,TRUE,19,30
+666931,"Jared Oliva","New York Mets","San Francisco Giants",2026-06-23,"Claimed",FALSE,0,0,0.5,0.5,TRUE,27,30
+666931,"Jared Oliva","Tampa Bay Rays","New York Mets",2026-08-28,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
+667463,"John King","Texas Rangers","Miami Marlins",2026-08-31,"Signed",TRUE,0,0.0517241379310345,0.45,NA,FALSE,17,30
+668670,"Jake Rogers","Baltimore Orioles","Detroit Tigers",2026-07-30,"Trade",FALSE,0,0,0.5,0.5,TRUE,25,30
+668670,"Jake Rogers","Chicago White Sox","Boston Red Sox",2026-08-14,"Claimed",FALSE,0,0.175287356321839,0.283333333333333,0.24,TRUE,25,30
 668834,"Easton McGee","Kansas City Royals","Milwaukee Brewers",2026-07-14,"Trade",TRUE,0,0,0.5,0.5,TRUE,15,30
-668974,"Maverick Handley","Atlanta Braves","Baltimore Orioles",2026-05-21,"Claimed",FALSE,0,0,0.5,0.5,TRUE,25,30
-668984,"Casey Legumina","Tampa Bay Rays","Seattle Mariners",2026-04-24,"Trade",TRUE,0,0.0517241379310345,0.45,0.411764705882353,TRUE,17,30
-669060,"Bryse Wilson","Chicago Cubs","Philadelphia Phillies",2026-06-24,"Claimed",TRUE,0,0.103448275862069,0.4,0.3125,TRUE,16,30
-669060,"Bryse Wilson","Milwaukee Brewers","Chicago Cubs",2026-07-10,"Signed",TRUE,0,0.120689655172414,0.4,NA,FALSE,15,30
-669212,"Eli Morgan","New York Yankees","Kansas City Royals",2026-08-21,"Signed",TRUE,0,0.258620689655172,0.316666666666667,NA,FALSE,17,30
+668984,"Casey Legumina","Tampa Bay Rays","Seattle Mariners",2026-04-24,"Trade",TRUE,0,0,0.5,0.5,TRUE,17,30
+669060,"Bryse Wilson","Chicago Cubs","Philadelphia Phillies",2026-06-24,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
+669060,"Bryse Wilson","Milwaukee Brewers","Chicago Cubs",2026-07-10,"Signed",TRUE,0,0,0.5,NA,FALSE,15,30
+669212,"Eli Morgan","New York Yankees","Kansas City Royals",2026-08-21,"Signed",TRUE,0,0,0.5,NA,FALSE,17,30
 669270,"Joel Kuhnel","Milwaukee Brewers","Athletics",2026-06-06,"Trade",TRUE,0,0,0.5,NA,FALSE,15,30
 669270,"Joel Kuhnel","San Francisco Giants","Milwaukee Brewers",2026-09-04,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
-669289,"Santiago Espinal","Texas Rangers","Los Angeles Dodgers",2026-07-02,"Signed",FALSE,0,0.181034482758621,0.266666666666667,0.240740740740741,TRUE,27,30
-669289,"Santiago Espinal","Arizona Diamondbacks","Texas Rangers",2026-08-20,"Signed",FALSE,0,0.198275862068966,0.283333333333333,NA,FALSE,25,30
+669289,"Santiago Espinal","Texas Rangers","Los Angeles Dodgers",2026-07-02,"Signed",FALSE,0,0.0804597701149425,0.4,0.388888888888889,TRUE,27,30
+669289,"Santiago Espinal","Arizona Diamondbacks","Texas Rangers",2026-08-20,"Signed",FALSE,0,0.0862068965517241,0.4,NA,FALSE,25,30
 669699,"Braden Shewmake","Milwaukee Brewers","Houston Astros",2026-07-12,"Trade",FALSE,0,0.118965517241379,0.366666666666667,0.346153846153846,TRUE,26,30
 669699,"Braden Shewmake","Houston Astros","Milwaukee Brewers",2026-07-31,"Signed",FALSE,0,0.103448275862069,0.4,0.384615384615385,TRUE,26,30
-669720,"Austin Hays","San Diego Padres","Chicago White Sox",2026-08-09,"Signed",FALSE,0.5,0.154597701149425,0.916666666666667,0.903846153846154,TRUE,26,30
-670032,"Nicky Lopez","Texas Rangers","Chicago Cubs",2026-05-27,"Signed",FALSE,0,0.221264367816092,0.283333333333333,0.267857142857143,TRUE,28,30
-670097,"Zack Short","New York Mets","Detroit Tigers",2026-06-15,"Claimed",FALSE,0.333333333333333,0.164367816091954,0.75,0.732142857142857,TRUE,28,30
-670224,"Kameron Misner","Philadelphia Phillies","Kansas City Royals",2026-07-25,"Trade",FALSE,0,0.181034482758621,0.283333333333333,0.24,TRUE,25,30
-670241,"Darius Vines","Cincinnati Reds","Atlanta Braves",2026-08-19,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
+669720,"Austin Hays","San Diego Padres","Chicago White Sox",2026-08-09,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
+670032,"Nicky Lopez","Texas Rangers","Chicago Cubs",2026-05-27,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+670090,"Wyatt Mills","Washington Nationals","Los Angeles Dodgers",2026-08-06,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
+670097,"Zack Short","New York Mets","Detroit Tigers",2026-06-15,"Claimed",FALSE,0,0,0.5,0.5,TRUE,28,30
+670224,"Kameron Misner","Philadelphia Phillies","Kansas City Royals",2026-07-25,"Trade",FALSE,0,0,0.5,0.5,TRUE,25,30
+670245,"Ryan Watson","Los Angeles Angels","Boston Red Sox",2026-08-07,"Claimed",TRUE,0.5,0.120689655172414,0.866666666666667,0.75,TRUE,16,30
 671083,"Buddy Kennedy","Seattle Mariners","San Francisco Giants",2026-06-29,"Trade",FALSE,0,0,0.5,0.5,TRUE,27,30
 671083,"Buddy Kennedy","San Francisco Giants","Seattle Mariners",2026-08-02,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
 671083,"Buddy Kennedy","Washington Nationals","San Francisco Giants",2026-09-02,"Signed",FALSE,0,0,0.5,NA,FALSE,26,30
 671111,"Sammy Peralta","Los Angeles Angels","Colorado Rockies",2026-06-27,"Signed",TRUE,0,0,0.5,0.5,TRUE,16,30
-671131,"Jackson Rutledge","Philadelphia Phillies","Washington Nationals",2026-05-10,"Claimed",TRUE,0,0.0862068965517241,0.416666666666667,0.361111111111111,TRUE,18,30
+671131,"Jackson Rutledge","Philadelphia Phillies","Washington Nationals",2026-05-10,"Claimed",TRUE,0,0,0.5,0.5,TRUE,18,30
 671162,"Connor Thomas","Kansas City Royals","Athletics",2026-08-04,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
-671286,"Johnathan Rodr<U+00ED>guez","Pittsburgh Pirates","Baltimore Orioles",2026-07-27,"Trade",FALSE,0,0.0632183908045977,0.416666666666667,0.4,TRUE,25,30
-671286,"Johnathan Rodr<U+00ED>guez","Athletics","Pittsburgh Pirates",2026-08-21,"Claimed",FALSE,0,0.0890804597701149,0.4,0.38,TRUE,25,30
-672279,"Michael Siani","Baltimore Orioles","Los Angeles Dodgers",2026-05-18,"Claimed",FALSE,0.333333333333333,0.217241379310345,0.65,0.58,TRUE,25,30
-672279,"Michael Siani","Detroit Tigers","Baltimore Orioles",2026-08-14,"Signed",FALSE,0.666666666666667,0.175287356321839,0.966666666666667,0.96,TRUE,25,30
-672284,"Jarred Kelenic","Texas Rangers","Chicago White Sox",2026-06-02,"Signed",FALSE,0.5,0.104022988505747,0.933333333333333,0.928571428571429,TRUE,28,30
-672284,"Jarred Kelenic","New York Yankees","Texas Rangers",2026-08-28,"Signed",FALSE,0,0.107471264367816,0.333333333333333,0.307692307692308,TRUE,26,30
-672335,"Cionel P<U+00E9>rez","New York Mets","Washington Nationals",2026-05-09,"Signed",TRUE,0,0.172413793103448,0.4,NA,FALSE,18,30
+671286,"Johnathan Rodr<U+00ED>guez","Pittsburgh Pirates","Baltimore Orioles",2026-07-27,"Trade",FALSE,0,0,0.5,0.5,TRUE,25,30
+671286,"Johnathan Rodr<U+00ED>guez","Athletics","Pittsburgh Pirates",2026-08-21,"Claimed",FALSE,0,0,0.5,0.5,TRUE,25,30
+672021,"Eric Cerantola","San Francisco Giants","Kansas City Royals",2026-07-06,"Claimed",TRUE,0,0,0.5,0.5,TRUE,15,30
+672279,"Michael Siani","Detroit Tigers","Baltimore Orioles",2026-08-14,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
+672284,"Jarred Kelenic","Texas Rangers","Chicago White Sox",2026-06-02,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
+672284,"Jarred Kelenic","New York Yankees","Texas Rangers",2026-08-28,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
+672335,"Cionel P<U+00E9>rez","New York Mets","Washington Nationals",2026-05-09,"Signed",TRUE,0,0,0.5,NA,FALSE,18,30
 672356,"Gabriel Arias","New York Mets","Cleveland Guardians",2026-08-07,"Claimed",FALSE,0,0.0827586206896552,0.35,0.326923076923077,TRUE,26,30
 672356,"Gabriel Arias","Chicago Cubs","New York Mets",2026-08-19,"Claimed",FALSE,0,0.0862068965517241,0.35,NA,FALSE,25,30
 672782,"Yoendrys G<U+00F3>mez","Minnesota Twins","Tampa Bay Rays",2026-05-06,"Trade",TRUE,0,0,0.5,0.5,TRUE,17,30
-674384,"Eduarniel N<U+00FA><U+00F1>ez","Baltimore Orioles","Athletics",2026-05-15,"Trade",TRUE,0,0,0.5,0.5,TRUE,18,30
-674384,"Eduarniel N<U+00FA><U+00F1>ez","Chicago Cubs","Baltimore Orioles",2026-06-08,"Claimed",TRUE,0,0,0.5,0.5,TRUE,15,30
-675627,"Michael Grove","Atlanta Braves","Tampa Bay Rays",2026-09-15,"Claimed",TRUE,0,0.603448275862069,0.183333333333333,NA,FALSE,19,30
+675627,"Michael Grove","Atlanta Braves","Tampa Bay Rays",2026-09-15,"Claimed",TRUE,0,0,0.5,NA,FALSE,19,30
 675659,"Greg Jones","Chicago Cubs","Milwaukee Brewers",2026-07-21,"Signed",FALSE,0,0,0.5,NA,FALSE,25,30
-676369,"Nelson Vel<U+00E1>zquez","Houston Astros","St. Louis Cardinals",2026-08-10,"Claimed",FALSE,0.25,0.0827586206896552,0.85,0.826923076923077,TRUE,26,30
-676466,"Jack Winkler","Athletics","Houston Astros",2026-06-30,"Signed",FALSE,0,0,0.5,0.5,TRUE,27,30
+676369,"Nelson Vel<U+00E1>zquez","Houston Astros","St. Louis Cardinals",2026-08-10,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
 676510,"Nolan Hoffman","Kansas City Royals","Philadelphia Phillies",2026-08-03,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
+676566,"Shawn Ross","New York Mets","Pittsburgh Pirates",2026-08-02,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
+676566,"Shawn Ross","Toronto Blue Jays","New York Mets",2026-09-05,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
 676568,"Ricky Vanasco","Atlanta Braves","Detroit Tigers",2026-08-26,"Claimed",TRUE,0,0,0.5,NA,FALSE,17,30
-676572,"Eric Wagaman","New York Mets","Minnesota Twins",2026-04-27,"Claimed",FALSE,0,0.155747126436782,0.35,0.339285714285714,TRUE,28,30
 676596,"Josh Fleming","Chicago Cubs","Toronto Blue Jays",2026-07-08,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
 676596,"Josh Fleming","St. Louis Cardinals","Chicago Cubs",2026-08-20,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
-676702,"Hunter Stratton","Pittsburgh Pirates","Atlanta Braves",2026-06-18,"Trade",TRUE,0,0.241379310344828,0.333333333333333,NA,FALSE,15,30
+676702,"Hunter Stratton","Pittsburgh Pirates","Atlanta Braves",2026-06-18,"Trade",TRUE,0,0,0.5,NA,FALSE,15,30
 676742,"Cam Sanders","Baltimore Orioles","Pittsburgh Pirates",2026-07-13,"Trade",TRUE,0,0,0.5,0.5,TRUE,15,30
-676760,"Ron Marinaccio","Pittsburgh Pirates","San Diego Padres",2026-07-23,"Trade",TRUE,0,0.0862068965517241,0.433333333333333,NA,FALSE,16,30
-676760,"Ron Marinaccio","Cincinnati Reds","Pittsburgh Pirates",2026-08-06,"Claimed",TRUE,0,0.120689655172414,0.416666666666667,0.34375,TRUE,16,30
-676760,"Ron Marinaccio","Minnesota Twins","Cincinnati Reds",2026-08-22,"Signed",TRUE,0,0.103448275862069,0.433333333333333,0.382352941176471,TRUE,17,30
-677592,"Everson Pereira","St. Louis Cardinals","Chicago White Sox",2026-08-06,"Claimed",FALSE,0,0.078735632183908,0.4,0.384615384615385,TRUE,26,30
-677950,"Alek Thomas","Los Angeles Dodgers","Arizona Diamondbacks",2026-05-12,"Trade",FALSE,0,0.102873563218391,0.333333333333333,0.3,TRUE,25,30
+676760,"Ron Marinaccio","Pittsburgh Pirates","San Diego Padres",2026-07-23,"Trade",TRUE,0,0,0.5,NA,FALSE,16,30
+676760,"Ron Marinaccio","Cincinnati Reds","Pittsburgh Pirates",2026-08-06,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
+676760,"Ron Marinaccio","Minnesota Twins","Cincinnati Reds",2026-08-22,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
+677592,"Everson Pereira","St. Louis Cardinals","Chicago White Sox",2026-08-06,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
+677950,"Alek Thomas","Los Angeles Dodgers","Arizona Diamondbacks",2026-05-12,"Trade",FALSE,0,0,0.5,0.5,TRUE,25,30
 677956,"Rece Hinds","Miami Marlins","Cincinnati Reds",2026-05-21,"Trade",FALSE,0,0,0.5,0.5,TRUE,25,30
 678489,"Jorge Barrosa","Houston Astros","Arizona Diamondbacks",2026-09-06,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
-678821,"Luis Peralta","St. Louis Cardinals","Colorado Rockies",2026-04-27,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
-678821,"Luis Peralta","Chicago Cubs","St. Louis Cardinals",2026-05-03,"Claimed",TRUE,0,0,0.5,NA,FALSE,17,30
-678894,"Liover Peguero","Washington Nationals","Philadelphia Phillies",2026-08-13,"Signed",FALSE,0,0,0.5,NA,FALSE,26,30
 680573,"Simeon Woods Richardson","Toronto Blue Jays","Minnesota Twins",2026-06-03,"Trade",TRUE,0,0,0.5,NA,FALSE,16,30
 680573,"Simeon Woods Richardson","Seattle Mariners","Toronto Blue Jays",2026-09-02,"Signed",TRUE,0,0,0.5,NA,FALSE,17,30
-680689,"Lyon Richardson","Milwaukee Brewers","Cincinnati Reds",2026-06-10,"Signed",TRUE,0,0.0862068965517241,0.416666666666667,NA,FALSE,15,30
-680704,"Nick Sandlin","Detroit Tigers","Los Angeles Angels",2026-05-10,"Signed",TRUE,0,0.224137931034483,0.35,NA,FALSE,18,30
-680716,"Jonathan Ornelas","Athletics","New York Yankees",2026-07-24,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
-680862,"Willie MacIver","Toronto Blue Jays","Texas Rangers",2026-04-24,"Trade",FALSE,0,0,0.5,0.5,TRUE,28,30
-680862,"Willie MacIver","Seattle Mariners","Toronto Blue Jays",2026-08-12,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
-680880,"Grant Holman","Philadelphia Phillies","Detroit Tigers",2026-05-07,"Claimed",TRUE,0,0.155172413793103,0.383333333333333,0.294117647058824,TRUE,17,30
+680689,"Lyon Richardson","Milwaukee Brewers","Cincinnati Reds",2026-06-10,"Signed",TRUE,0,0,0.5,NA,FALSE,15,30
+680704,"Nick Sandlin","Detroit Tigers","Los Angeles Angels",2026-05-10,"Signed",TRUE,0,0,0.5,NA,FALSE,18,30
+680723,"Drew Rom","Athletics","Milwaukee Brewers",2026-08-11,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
 681151,"Jayden Murray","Chicago Cubs","Houston Astros",2026-06-20,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
-681432,"Luke Little","Kansas City Royals","Chicago Cubs",2026-08-06,"Claimed",TRUE,0.5,0.103448275862069,0.883333333333333,0.78125,TRUE,16,30
-681546,"James Outman","Detroit Tigers","Minnesota Twins",2026-06-11,"Claimed",FALSE,0.333333333333333,0.164367816091954,0.75,0.732142857142857,TRUE,28,30
+681252,"Jack Anderson","Minnesota Twins","Boston Red Sox",2026-07-11,"Claimed",TRUE,0,0,0.5,0.5,TRUE,15,30
+681432,"Luke Little","Kansas City Royals","Chicago Cubs",2026-08-06,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
+681546,"James Outman","Detroit Tigers","Minnesota Twins",2026-06-11,"Claimed",FALSE,0,0,0.5,0.5,TRUE,28,30
 681806,"Andrew Wantz","Chicago Cubs","Tampa Bay Rays",2026-06-06,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
-681869,"Shawn Dubin","Washington Nationals","Arizona Diamondbacks",2026-05-01,"Signed",TRUE,0.5,0.137931034482759,0.85,0.735294117647059,TRUE,17,30
 682515,"Logan Porter","Los Angeles Angels","San Francisco Giants",2026-06-08,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
-682790,"Wikelman Gonz<U+00E1>lez","Miami Marlins","Chicago White Sox",2026-08-10,"Claimed",TRUE,0,0.120689655172414,0.416666666666667,NA,FALSE,16,30
-683090,"Matthew Lugo","Kansas City Royals","Los Angeles Angels",2026-06-02,"Claimed",FALSE,0,0,0.5,0.5,TRUE,28,30
+682877,"Juan Brito","Cincinnati Reds","Cleveland Guardians",2026-08-03,"Trade",FALSE,0,0,0.5,0.5,TRUE,26,30
 685005,"Christian Roa","Baltimore Orioles","Minnesota Twins",2026-05-10,"Claimed",TRUE,0,0,0.5,0.5,TRUE,18,30
 685005,"Christian Roa","Chicago Cubs","Baltimore Orioles",2026-05-17,"Claimed",TRUE,0,0,0.5,0.5,TRUE,18,30
 685005,"Christian Roa","Houston Astros","Chicago Cubs",2026-07-03,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
-685801,"Hunter Bigge","Athletics","Tampa Bay Rays",2026-09-11,"Claimed",TRUE,0,0.310344827586207,0.316666666666667,0.210526315789474,TRUE,19,30
+685801,"Hunter Bigge","Athletics","Tampa Bay Rays",2026-09-11,"Claimed",TRUE,0,0,0.5,0.5,TRUE,19,30
+686678,"Chase Solesky","Cincinnati Reds","Tampa Bay Rays",2026-08-06,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
 686894,"Joey Wiemer","Chicago White Sox","Washington Nationals",2026-08-08,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
-687074,"Tyler Owens","Pittsburgh Pirates","Detroit Tigers",2026-08-26,"Signed",TRUE,0,0,0.5,0.5,TRUE,17,30
-687223,"Carson Palmquist","Washington Nationals","Colorado Rockies",2026-05-25,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
-687799,"Cade Marlowe","Los Angeles Angels","Athletics",2026-07-21,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
+687721,"Cameron Weston","New York Mets","Baltimore Orioles",2026-09-03,"Claimed",TRUE,0,0,0.5,NA,FALSE,17,30
 687849,"Zak Kent","Washington Nationals","Minnesota Twins",2026-05-03,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
 687957,"Dustin Harris","Chicago White Sox","Houston Astros",2026-05-12,"Signed",FALSE,0,0,0.5,0.5,TRUE,25,30
 687957,"Dustin Harris","San Diego Padres","Chicago White Sox",2026-07-08,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
-688297,"Chris Roycroft","Tampa Bay Rays","St. Louis Cardinals",2026-06-23,"Trade",TRUE,0,0.0862068965517241,0.433333333333333,0.375,TRUE,16,30
-688297,"Chris Roycroft","Athletics","Tampa Bay Rays",2026-08-25,"Claimed",TRUE,0.5,0.0689655172413793,0.916666666666667,0.852941176470588,TRUE,17,30
-688497,"Taylor Rashi","Minnesota Twins","Arizona Diamondbacks",2026-06-08,"Trade",TRUE,0,0.0862068965517241,0.433333333333333,0.366666666666667,TRUE,15,30
-688497,"Taylor Rashi","Athletics","Minnesota Twins",2026-08-09,"Claimed",TRUE,0,0.120689655172414,0.416666666666667,0.34375,TRUE,16,30
-688760,"Blaine Crim","Texas Rangers","Colorado Rockies",2026-05-23,"Claimed",FALSE,0,0,0.5,0.5,TRUE,28,30
-689041,"Rhylan Thomas","Houston Astros","Seattle Mariners",2026-05-09,"Claimed",FALSE,0,0,0.5,0.5,TRUE,25,30
-689041,"Rhylan Thomas","Toronto Blue Jays","Houston Astros",2026-06-15,"Signed",FALSE,0,0,0.5,0.5,TRUE,28,30
-691172,"Yosver Zulueta","Chicago Cubs","Seattle Mariners",2026-06-15,"Trade",TRUE,0,0.0862068965517241,0.433333333333333,0.366666666666667,TRUE,15,30
-691172,"Yosver Zulueta","Baltimore Orioles","Chicago Cubs",2026-06-28,"Claimed",TRUE,0.5,0.103448275862069,0.883333333333333,0.78125,TRUE,16,30
+688297,"Chris Roycroft","Tampa Bay Rays","St. Louis Cardinals",2026-06-23,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
+688297,"Chris Roycroft","Athletics","Tampa Bay Rays",2026-08-25,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
+688497,"Taylor Rashi","Minnesota Twins","Arizona Diamondbacks",2026-06-08,"Trade",TRUE,0,0,0.5,0.5,TRUE,15,30
+688497,"Taylor Rashi","Athletics","Minnesota Twins",2026-08-09,"Claimed",TRUE,0,0,0.5,0.5,TRUE,16,30
 691769,"Philip Abner","San Francisco Giants","Arizona Diamondbacks",2026-08-19,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
 691769,"Philip Abner","New York Mets","San Francisco Giants",2026-09-23,"Claimed",TRUE,0,0,0.5,NA,FALSE,19,30
-692024,"Alex Carrillo","San Francisco Giants","New York Mets",2026-07-14,"Signed",TRUE,0,0,0.5,0.5,TRUE,15,30
-693312,"Kyle Nicolas","Baltimore Orioles","Cincinnati Reds",2026-06-04,"Trade",TRUE,0,0.155172413793103,0.416666666666667,0.34375,TRUE,16,30
-693312,"Kyle Nicolas","Washington Nationals","Baltimore Orioles",2026-07-01,"Trade",TRUE,1,0.103448275862069,0.95,0.90625,TRUE,16,30
+693312,"Kyle Nicolas","Baltimore Orioles","Cincinnati Reds",2026-06-04,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
+693312,"Kyle Nicolas","Washington Nationals","Baltimore Orioles",2026-07-01,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
+693459,"Kyler Fedko","Pittsburgh Pirates","Minnesota Twins",2026-09-04,"Signed",FALSE,0,0,0.5,0.5,TRUE,26,30
 694376,"Shay Whitcomb","San Francisco Giants","Houston Astros",2026-08-13,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
 694646,"Chayce McDermott","New York Mets","Los Angeles Dodgers",2026-08-03,"Trade",TRUE,0,0,0.5,NA,FALSE,16,30
+694680,"Trevor Martin","Los Angeles Angels","Tampa Bay Rays",2026-08-15,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
 694851,"Andrew Hoffmann","Philadelphia Phillies","Arizona Diamondbacks",2026-08-20,"Claimed",TRUE,0,0,0.5,NA,FALSE,17,30
-695391,"Brett Harris","Boston Red Sox","Athletics",2026-07-01,"Trade",FALSE,0.5,0.126436781609195,0.933333333333333,0.925925925925926,TRUE,27,30
-695391,"Brett Harris","San Francisco Giants","Boston Red Sox",2026-09-03,"Claimed",FALSE,0.5,0.147701149425287,0.9,0.884615384615385,TRUE,26,30
+695391,"Brett Harris","Boston Red Sox","Athletics",2026-07-01,"Trade",FALSE,0,0,0.5,0.5,TRUE,27,30
+695391,"Brett Harris","San Francisco Giants","Boston Red Sox",2026-09-03,"Claimed",FALSE,0,0,0.5,0.5,TRUE,26,30
+696522,"Hayden Juenger","Athletics","Toronto Blue Jays",2026-06-27,"Trade",TRUE,0,0,0.5,0.5,TRUE,16,30
 697812,"Joe Rock","Athletics","Chicago White Sox",2026-08-16,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
-700270,"Yilber D<U+00ED>az","Detroit Tigers","Arizona Diamondbacks",2026-06-26,"Claimed",TRUE,0,0,0.5,NA,FALSE,16,30
+701474,"Duncan Davitt","Atlanta Braves","Chicago White Sox",2026-08-03,"Trade",TRUE,0,0,0.5,NA,FALSE,16,30
 701552,"Andre Granillo","Detroit Tigers","Washington Nationals",2026-07-11,"Claimed",TRUE,0,0,0.5,NA,FALSE,15,30
-702352,"Spencer Bivens","Kansas City Royals","San Francisco Giants",2026-09-12,"Claimed",TRUE,0,0.362068965517241,0.266666666666667,0.131578947368421,TRUE,19,30
-802686,"Hayden Harris","Colorado Rockies","Atlanta Braves",2026-09-04,"Claimed",TRUE,0,0,0.5,0.5,TRUE,17,30
+702352,"Spencer Bivens","Kansas City Royals","San Francisco Giants",2026-09-12,"Claimed",TRUE,0,0,0.5,0.5,TRUE,19,30

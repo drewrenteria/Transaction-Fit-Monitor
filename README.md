@@ -40,8 +40,9 @@ the feed and it is right.
 
 **Fit is a first-pass sort, not a prediction.** Two backtests say the coarse
 signal is real and the fine one is not. Clubs do acquire players in the
-category they are short in, measurably more often than chance (76.0% against a
-68.5% base rate, p = 0.0099). But *which* player they take inside that category
+category they are short in, measurably more often than chance (77.4% against a
+67.9% base rate, p = 0.0031, holding under all three grading arms). But
+*which* player they take inside that category
 has no relationship to how many specific metrics he clears. So the labels state
 what was computed ("clears 2 of 3 needs") instead of implying confidence
 ("strong match"), and the work they do is narrowing the list, not ranking it
@@ -217,29 +218,52 @@ player against the acquiring club's needs **and against all 29 others', as of
 the same date**. Same player, same week, same market, so player quality is held
 constant by construction. Under the null the acquirer lands mid-pack.
 
-**Clubs match to need at the category level.**
+**Clubs match to need at the category level, and it holds under all three
+grading arms.**
 
-| | acquirer | base rate | lift | p |
+| arm | n | acquirer | base | lift | p |
+|---|---|---|---|---|---|
+| 1. prior season | 225 | 0.760 | 0.685 | +0.075 | 0.0099 |
+| 2. current season to date | 181 | 0.774 | 0.679 | +0.094 | 0.0031 |
+| **3. the page's own rule (primary)** | **181** | **0.774** | **0.679** | **+0.094** | **0.0031** |
+
+Arms 2 and 3 are identical here by construction, which is a useful check that
+the code does what it claims: category matching reads a player's position group
+and the club's needs, never his rates, so changing the grading basis cannot
+move it. The arms diverge only on the ranking measures below.
+
+**But inside a category, the metric-level scoring is worthless, and that also
+holds under all three.** Among clubs that needed pitching, which pitcher they
+took had nothing to do with how well his rates answered the specific flagged
+metric:
+
+| arm | all 30 ranked | p | needful clubs only | p |
 |---|---|---|---|---|
-| Had a flagged need in his category | 0.760 | 0.685 | **+0.075** | **0.0099** |
+| 1. prior season | 0.511 | 0.55 | 0.501 | 0.95 |
+| 2. current season to date | 0.513 | 0.53 | 0.514 | 0.56 |
+| **3. the page's own rule (primary)** | **0.512** | **0.58** | **0.512** | **0.61** |
 
-**But inside a category, the metric-level scoring is worthless.** Among clubs
-that needed pitching, which pitcher they took had nothing to do with how well
-his rates answered the specific flagged metric:
+Two things worth reading carefully in arm 3. The sample drops from 225 to 181,
+because players who spent 2026 in the minors have no major league line to grade
+that season. And the clear-rates collapse — 0.121 on the prior-season line
+against 0.042 on the page's rule — which is the predicted cost of grading a
+waiver-wire player on a partial season: most metrics never reach the sample
+where they stabilize, so they are dropped rather than credited.
 
-| | acquirer percentile | p |
-|---|---|---|
-| All 30 clubs ranked | 0.511 | 0.55 |
-| Only clubs needing his category | 0.501 | 0.95 |
+That collapse makes the raw gap look dramatic: in arm 3 the acquirer clears
+0.042 against the field's 0.020, slightly over twice the rate. That ratio is
+not evidence. When most values are zero a ratio of small numbers swings wildly,
+which is exactly why the test reads the rank rather than the level, and the
+rank says 0.512 with p = 0.58.
 
 **And the effect lives in deliberate moves, not depth signings** (exploratory,
 not pre-registered):
 
 | route | n | acquirer | base | lift |
 |---|---|---|---|---|
-| Trade | 41 | 0.829 | 0.644 | +0.185 |
-| Claimed off waivers | 60 | 0.817 | 0.687 | +0.129 |
-| Signed as free agent | 124 | 0.710 | 0.698 | +0.012 |
+| Trade | 38 | 0.789 | 0.639 | +0.150 |
+| Claimed off waivers | 57 | 0.825 | 0.670 | +0.154 |
+| Signed as free agent | 86 | 0.733 | 0.703 | +0.030 |
 
 Trades and claims cost something: a prospect, a 40-man spot, waiver priority.
 Those track need. In-season free agent signings are organizational depth and
