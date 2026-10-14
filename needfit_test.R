@@ -60,20 +60,20 @@ grid_needs <- needs_as_of(GRID, teams)
 message(sprintf("  %d usable dates", length(grid_needs)))
 
 # --- 3. player lines ---------------------------------------------------------
-# Arm 1: 2024-25 combined. Complete and public before 2026 began.
-# Arm 2/3: the current season bounded to each grid date, which is what the club
+# Base 1: 2024-25 combined. Complete and public before 2026 began.
+# Base 2/3: the current season bounded to each grid date, which is what the club
 # actually had in front of it. Bounded, so there is no lookahead either way.
 message("\n[3/4] player lines")
 prior <- fetch_fg_players(season = SEASON - 1, season_from = SEASON - 2,
                           tag = "needfit_prior")
-message(sprintf("  arm 1: %d players with a 2024-25 line", length(prior)))
+message(sprintf("  base 1: %d players with a 2024-25 line", length(prior)))
 
 cur_by_date <- list()
 for (d in names(grid_needs)) {
   cur_by_date[[d]] <- fetch_fg_players(date_to = d,
                                        tag = paste0("needfit_cur_", gsub("-", "", d)))
 }
-message(sprintf("  arm 2/3: %d dated snapshots, %.0f players each",
+message(sprintf("  base 2/3: %d dated snapshots, %.0f players each",
                 length(cur_by_date), mean(lengths(cur_by_date))))
 
 people <- fetch_people(unique(acq$mlbam_id))
@@ -86,10 +86,10 @@ for (i in seq_len(nrow(people))) {
 message(sprintf("  %d bios", length(bios)))
 
 # --- 4. test -----------------------------------------------------------------
-# Arm 3 is the primary test: the only arm that grades a player the way
+# Base 3 is the primary test: the only basis that grades a player the way
 # template.html grades him. Pre-registered in the README before this ran.
-message("\n[4/4] scoring, three arms")
-arms <- list(
+message("\n[4/4] scoring, three grading bases")
+bases <- list(
   "1. prior season (2024-25)" =
     run_needfit_test(acq, grid_needs, prior, bios),
   "2. current season to date" =
@@ -98,10 +98,10 @@ arms <- list(
     run_needfit_test(acq, grid_needs, NULL, bios, lines_by_date = cur_by_date,
                      career = prior)
 )
-for (nm in names(arms))
-  message(sprintf("  %-34s %d scorable", nm, nrow(arms[[nm]])))
+for (nm in names(bases))
+  message(sprintf("  %-34s %d scorable", nm, nrow(bases[[nm]])))
 
-report_arm <- function(nm, r) {
+report_basis <- function(nm, r) {
   pt  <- perm_p(r, "pct", "n_clubs")
   pts <- perm_p(r, "pct_strict", "n_with_need")
   cm  <- category_match(r)
@@ -121,18 +121,18 @@ report_arm <- function(nm, r) {
 }
 
 cat("\n", strrep("=", 72), "\n", sep = "")
-cat("ALL THREE ARMS\n")
+cat("ALL THREE GRADING BASES\n")
 cat(strrep("=", 72), "\n", sep = "")
 stats <- list()
-for (nm in names(arms)) stats[[nm]] <- report_arm(nm, arms[[nm]])
+for (nm in names(bases)) stats[[nm]] <- report_basis(nm, bases[[nm]])
 
-res <- arms[[3]]
+res <- bases[[3]]
 pt  <- stats[[3]]$pt
 pts <- stats[[3]]$pts
 cm  <- stats[[3]]$cm
 
 cat("\n", strrep("=", 68), "\n", sep = "")
-cat("PRIMARY TEST — arm 3, the page's own rule\n")
+cat("PRIMARY TEST — base 3, the page's own rule\n")
 cat(strrep("=", 68), "\n\n", sep = "")
 cat(sprintf("Acquisitions scored            %d\n", nrow(res)))
 cat(sprintf("  pitchers                     %d\n", sum(res$is_pit)))

@@ -85,7 +85,7 @@ THIN_FLOOR  <- 0.6
 #' @param is_pit TRUE for a pitcher
 #' @param needs  that club's flagged needs, as build_needs returns them
 #' @param career optional prior-season line. Supplying it switches to the
-#'   page's own rule (arm 3): a thin current sample counts only when the career
+#'   page's own rule (base 3): a thin current sample counts only when the career
 #'   line clears the same bar on real sample. Faithful to `evaluate()` in
 #'   template.html, where career upgrades a thin hit to a solid one but never
 #'   rescues a dropped metric and never substitutes for a failing current value.
@@ -116,9 +116,9 @@ clear_rate <- function(line, is_pit, needs, career = NULL) {
       cleared <- cleared + 1L                 # solid on its own
     } else if (sample >= floor_n * THIN_FLOOR) {
       if (is.null(career)) {
-        cleared <- cleared + 1L               # arms 1 and 2: thin still counts
+        cleared <- cleared + 1L               # bases 1 and 2: thin still counts
       } else {
-        cv <- career[[key]]                   # arm 3: only if history backs it
+        cv <- career[[key]]                   # base 3: only if history backs it
         if (!is.null(cv) && !is.na(cv) && car_n >= floor_n && isTRUE(POS[[key]](cv)))
           cleared <- cleared + 1L
       }
@@ -205,9 +205,9 @@ nearest_grid <- function(d, grid) {
 #' Ties share the average rank, so a player who answers nobody's needs (or
 #' everybody's) lands at 0.50 rather than counting as evidence either way.
 #' @param lines      named list of player lines to grade on
-#' @param lines_by_date for arm 2 and 3: grid date -> player lines as of that
+#' @param lines_by_date for base 2 and 3: grid date -> player lines as of that
 #'   date. When supplied it overrides `lines` as the primary record.
-#' @param career     for arm 3: prior-season lines used to back a thin sample
+#' @param career     for base 3: prior-season lines used to back a thin sample
 run_needfit_test <- function(acq, needs_grid, lines, bios,
                              lines_by_date = NULL, career = NULL) {
   recs <- list()

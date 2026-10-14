@@ -39,7 +39,7 @@ the feed and it is right.
 **Fit is a first-pass sort, not a prediction.** Two backtests say the coarse
 signal is real and the fine one is not. Clubs do acquire players in the
 category they are short in, measurably more often than chance (77.4% against a
-67.9% base rate, p = 0.0031, holding under all three grading arms). But
+67.9% base rate, p = 0.0031, holding under all three grading bases). But
 *which* player they take inside that category
 has no relationship to how many specific metrics he clears. So the labels state
 what was computed ("clears 2 of 3 needs") instead of implying confidence
@@ -193,19 +193,19 @@ good, which is not the claim this tool makes.
 The need-fit test below grades players three ways, because there are three
 defensible answers to "what could the club have known that day".
 
-| arm | graded on | asks |
+| basis | graded on | asks |
 |---|---|---|
 | 1 | 2024-25 only | pre-determined and stable, immune to the player's current slump |
 | 2 | 2026 up to the acquisition date | the information the club actually had |
 | **3** | **the dashboard's own rule: 2026 primary, 2024-25 backing a thin sample** | **does the tool as shipped carry signal** |
 
-**Arm 3 is the primary test.** It is the only one that grades a player the way
+**Base 3 is the primary test.** It is the only one that grades a player the way
 `template.html` grades him, so it is the only one that tests the product rather
-than a near relative of it. Arms 1 and 2 are robustness checks. If all three
-agree the finding is solid; if only one moves, that is a result about that arm
+than a near relative of it. Bases 1 and 2 are robustness checks. If all three
+agree the finding is solid; if only one moves, that is a result about that basis
 and is reported as such, not promoted.
 
-This section was committed before the arm 2 and arm 3 numbers existed. The git
+This section was committed before the base 2 and base 3 numbers existed. The git
 history shows the order.
 
 ### Test two: do the needs predict *which* club takes him?
@@ -217,38 +217,38 @@ the same date**. Same player, same week, same market, so player quality is held
 constant by construction. Under the null the acquirer lands mid-pack.
 
 **Clubs match to need at the category level, and it holds under all three
-grading arms.**
+grading bases.**
 
-| arm | n | acquirer | base | lift | p |
+| basis | n | acquirer | base | lift | p |
 |---|---|---|---|---|---|
 | 1. prior season | 225 | 0.760 | 0.685 | +0.075 | 0.0099 |
 | 2. current season to date | 181 | 0.774 | 0.679 | +0.094 | 0.0031 |
 | **3. the page's own rule (primary)** | **181** | **0.774** | **0.679** | **+0.094** | **0.0031** |
 
-Arms 2 and 3 are identical here by construction, which is a useful check that
+Bases 2 and 3 are identical here by construction, which is a useful check that
 the code does what it claims: category matching reads a player's position group
 and the club's needs, never his rates, so changing the grading basis cannot
-move it. The arms diverge only on the ranking measures below.
+move it. The bases diverge only on the ranking measures below.
 
 **But inside a category, the metric-level scoring is worthless, and that also
 holds under all three.** Among clubs that needed pitching, which pitcher they
 took had nothing to do with how well his rates answered the specific flagged
 metric:
 
-| arm | all 30 ranked | p | needful clubs only | p |
+| basis | all 30 ranked | p | needful clubs only | p |
 |---|---|---|---|---|
 | 1. prior season | 0.511 | 0.55 | 0.501 | 0.95 |
 | 2. current season to date | 0.513 | 0.53 | 0.514 | 0.56 |
 | **3. the page's own rule (primary)** | **0.512** | **0.58** | **0.512** | **0.61** |
 
-Two things worth reading carefully in arm 3. The sample drops from 225 to 181,
+Two things worth reading carefully in base 3. The sample drops from 225 to 181,
 because players who spent 2026 in the minors have no major league line to grade
 that season. And the clear-rates collapse — 0.121 on the prior-season line
 against 0.042 on the page's rule — which is the predicted cost of grading a
 waiver-wire player on a partial season: most metrics never reach the sample
 where they stabilize, so they are dropped rather than credited.
 
-That collapse makes the raw gap look dramatic: in arm 3 the acquirer clears
+That collapse makes the raw gap look dramatic: in base 3 the acquirer clears
 0.042 against the field's 0.020, slightly over twice the rate. That ratio is
 not evidence. When most values are zero a ratio of small numbers swings wildly,
 which is exactly why the test reads the rank rather than the level, and the

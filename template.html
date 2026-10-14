@@ -185,6 +185,15 @@ tbody tr:hover td{background:#FAFAF7}
 .gap{display:inline-block;width:62px;height:5px;background:var(--sunk);
   border:1px solid var(--rule);vertical-align:middle;margin-left:7px;position:relative}
 .gap i{position:absolute;left:0;top:0;bottom:0;background:var(--hi);display:block}
+.fitgrp{margin:0 0 26px}
+.fghead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  padding:0 0 7px;border-bottom:2px solid var(--rule);margin:0 0 2px}
+.fgarea{font-size:15px;font-weight:650;letter-spacing:-.01em}
+.fgmeta{font-size:12px;color:var(--ink2);font-variant-numeric:tabular-nums}
+.fgcount{margin-left:auto;font-size:12px;color:var(--ink2);white-space:nowrap}
+.fgdetail{font-size:12.5px;color:var(--ink2)}
+.fgthin{color:var(--ink3)}
+.fgmore{margin:7px 0 0;font-size:12px;color:var(--ink3)}
 .lbl{font-weight:600}
 .lbl.Strong{color:var(--strong)} .lbl.Possible{color:var(--possible)}
 .lbl.Review{color:var(--review)} .lbl.No{color:var(--no)} .lbl.NA{color:var(--ink3)}
@@ -761,19 +770,52 @@ function render(){
       <td class="num">${b.st==="DFA"&&b.days!=null?b.days+"d left":b.onMarketDays+"d"}</td>
     </tr>`;
 
+  // Grouped by need area rather than one flat list sorted by clear-count.
+  // needfit_test.R found the category signal real (p=0.0031 across all three
+  // grading bases) and the metric-level ranking null (0.512, p=0.58), so the
+  // category is what the page leads with.
+  function fitGroups(){
+    const meta = {};
+    F.mlbNeeds.forEach(n=>{ if(!meta[n.area]) meta[n.area] = {...n, side:"Major league"}; });
+    F.farmNeeds.forEach(n=>{ if(!meta[n.area]) meta[n.area] = {...n, side:"Farm system"}; });
+
+    const g = {};
+    [...F.mlb, ...F.farm].forEach(r=>{
+      const k = r.ev.need || "Other";
+      (g[k] = g[k] || []).push(r);
+    });
+    const pri = p => p==="High"?0 : p==="Medium"?1 : 2;
+    const keys = Object.keys(g).sort((a,b)=>
+      pri(meta[a] && meta[a].pri) - pri(meta[b] && meta[b].pri) || g[b].length - g[a].length);
+
+    return keys.map(k=>{
+      const m = meta[k], rows = g[k];
+      return `<section class="fitgrp">
+        <div class="fghead">
+          <span class="fgarea">${esc(k)}</span>
+          ${m?`<span class="pritag ${m.pri}">${m.pri.toLowerCase()} priority</span>
+               <span class="fgmeta">${esc(m.side)} &middot; ${esc(m.metricFull)}, ${ord(m.rank)} of ${m.n}</span>`:""}
+          <span class="fgcount">${rows.length} available</span>
+        </div>
+        <div class="tscroll"><table><thead><tr>
+          <th>Player</th><th>Pos</th><th>Level</th><th>What his line shows</th><th>On market</th>
+        </tr></thead><tbody>
+        ${rows.slice(0,8).map(r=>`<tr${r.a.new?' class="isnew"':""}>
+          <td><a href="https://www.mlb.com/player/${r.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(r.pl.n)}</a>${r.a.new?' <span class="newtag">new</span>':""}</td>
+          <td>${esc(r.pl.p||"")}</td><td>${esc(r.a.lvl||"")}</td>
+          <td class="fgdetail">${esc(r.ev.label)}${r.ev.thin?` <span class="fgthin">${esc(r.ev.thin)}</span>`:""}</td>
+          <td class="num">${r.a.st==="DFA"&&r.a.days!=null?r.a.days+"d left":r.a.onMarketDays+"d"}</td>
+        </tr>`).join("")}
+        </tbody></table></div>
+        ${rows.length>8?`<p class="fgmore">${rows.length-8} more on the Potential fits tab.</p>`:""}
+      </section>`;
+    }).join("");
+  }
+
   if(need("brief")) document.getElementById("p-brief").innerHTML = `
     <h2>Fits for ${esc(org)}</h2>
-    <p class="note">The same board filtered to players whose production answers a flagged need. Full detail on the Potential fits tab.</p>
-    ${total
-      ? `<div class="tscroll"><table><thead><tr><th>Player</th><th>Pos</th><th>Level</th><th>Answers</th><th>Reading</th><th>On market</th></tr></thead><tbody>
-          ${[...F.mlb,...F.farm].slice(0,10).map(r=>`<tr${r.a.new?' class="isnew"':""}>
-            <td><a href="https://www.mlb.com/player/${r.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(r.pl.n)}</a>${r.a.new?' <span class="newtag">new</span>':""}</td>
-            <td>${esc(r.pl.p||"")}</td><td>${esc(r.a.lvl||"")}</td>
-            <td>${esc(r.ev.need||"")}${r.ev.topPri?` <span class="pritag ${r.ev.topPri}">${r.ev.topPri.toLowerCase()}</span>`:""}</td>
-            <td class="lbl ${r.ev.cls}">${esc(r.ev.label)}</td>
-            <td class="num">${r.a.st==="DFA"&&r.a.days!=null?r.a.days+"d left":r.a.onMarketDays+"d"}</td></tr>`).join("")}
-        </tbody></table></div>`
-      : `<div class="empty">No player on the market answers a flagged need for ${esc(org)} right now.</div>`}
+    <p class="note">Grouped by the hole each player speaks to. A backtest across the 2026 season found clubs do acquire in the category they are short in, measurably more often than chance, but that how many specific metrics a player clears carries no signal. So the grouping leads and the count below each name is detail, not a ranking.</p>
+    ${total ? fitGroups() : `<div class="empty">No player on the market answers a flagged need for ${esc(org)} right now.</div>`}
 
     <h2>New in the last 7 days</h2>
     ${newOnes.length
