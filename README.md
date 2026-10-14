@@ -20,10 +20,12 @@ minor league combined. Almost all of them are noise. A handful put somebody on
 the market who could actually help your club, and finding those means reading
 the whole feed.
 
-This narrows that down by working out who is genuinely obtainable right now, then
+This reads it for you. It works out who is genuinely gettable right now, then
 sorts that list by whether a player's production answers a hole your
 organization actually has. The point is to turn a thousand rows into a dozen
 names worth a human look, not to make the call for anyone.
+
+Built for people with ninety seconds.
 
 ![status](https://img.shields.io/badge/status-working-brightgreen)
 ![R](https://img.shields.io/badge/built%20with-R-276DC3)
@@ -51,7 +53,7 @@ caveats.
 ## What it does
 
 - Pulls every transaction league-wide, major and minor, from the MLB Stats API
-- Works out who is **actually obtainable today** by walking each player's event
+- Works out who is **actually gettable today** by walking each player's event
   sequence, so a player who was designated and then claimed drops off the board
 - Runs a claim clock on designations, since that decision expires
 - Flags each club's real weaknesses using rank **and** distance from league
@@ -91,6 +93,7 @@ R/05_build_payload.R         assemble JSON, write the HTML
 template.html                the page; reads the payload and scores fit in-browser
 
 R/06_needfit_test.R          the need-fit backtest: does need predict the buyer?
+R/07_level_adjust.R          puts minor league rates on a common scale
 needfit_test.R               runs it
 python/                      reference implementation, not the pipeline
 validate.R                   diffs the R payload against that reference
@@ -119,9 +122,10 @@ Thresholds all live in `R/00_config.R`. Change a cutoff there and rebuild.
 | Major league player lines | FanGraphs | Joined on MLBAM id, so no name matching |
 | Farm needs and minor league lines | MLB Stats API | FanGraphs has no public minor league leaderboard on this path |
 
-That last row is the weakest link and the page says so. Minor league rates carry
-no park or level adjustment, so a .170 ISO in the complex league is treated the
-same as a .170 ISO in Triple-A.
+Minor league rates are **level-adjusted**: every one is expressed against its
+own league, so 100 is average for the level and higher is always better. Park
+is still not adjusted, because the Stats API publishes no minor league park
+factors. See below for why the level half mattered so much.
 
 ## Things that will bite you
 
@@ -166,6 +170,47 @@ window, so he arrived with no position and fell out of the board without an
 error anywhere. `build.R` fetches the union of the two sets. This is the bug
 `validate.R` was written to catch, and it is the reason the Python reference is
 still in the repo.
+
+**A minor league rate means nothing until you know the league.** The farm side
+used to grade prospects against major league thresholds. Against the 2026
+baselines that is not a small bias, it is backwards for half the metrics:
+
+| level | league OBP | league ERA | league BB% |
+|---|---|---|---|
+| MLB | .318 | 4.17 | 8.9 |
+| Triple-A | .349 | 4.99 | 11.2 |
+| Double-A | .340 | 4.85 | 10.9 |
+| High-A | .351 | 5.08 | 12.0 |
+| Single-A | .354 | 4.98 | 12.5 |
+| Rookie | **.401** | 5.34 | **15.6** |
+
+"OBP at or above .330 is on-base ability" reads twelve points above average in
+the majors, nineteen points *below* average in Triple-A, and seventy-one points
+below in rookie ball, and it passed in all three. Hitters at low levels were
+systematically over-flagged. Pitchers broke the opposite way, since an ERA of
+4.00 is ordinary in MLB and nearly unreachable against a 5.34 rookie league, so
+good low-level arms were missed.
+
+Every farm rate is now a plus value against its own league, the way OPS+ and
+ERA+ have always worked. The cutoffs were not invented: each is the matching
+major league threshold divided by the major league baseline, so the stringency
+that was already tuned carries over and simply stops depending on which level a
+player happened to be standing in. `R/07_level_adjust.R` does the work, and the
+resulting cutoffs ship in the payload rather than being hardcoded twice.
+
+What changed, on players with 100+ PA or 30+ IP:
+
+| | Rookie | Single-A | High-A | Double-A | Triple-A |
+|---|---|---|---|---|---|
+| hitters flagged for on-base, before | 75% | 79% | 85% | 55% | 73% |
+| after | **12%** | 26% | 40% | 29% | 43% |
+| pitchers flagged for run prevention, before | 0% | 22% | 19% | 26% | 42% |
+| after | **33%** | 22% | 44% | 56% | 69% |
+
+Both directions moved as predicted, and hardest at the bottom, which is where
+the distortion was worst. Rookie-ball hitters average a .369 OBP and a 92 OBP+:
+they look excellent by a major league yardstick and are below average for where
+they actually play.
 
 **Sample size cuts both ways.** Only good numbers get flagged, so an ungated
 small sample fills the board with players whose rates look strong precisely
@@ -301,7 +346,12 @@ got caught. Both measures are still reported.
 
 ## Honest limitations
 
-- The farm side is unadjusted for park and level.
+- The farm side is level-adjusted but still not park-adjusted. The Stats API
+  publishes no minor league park factors, so El Paso and Dayton are treated
+  alike. Level was much the larger distortion and is fixed; this residual is not.
+- The need-fit backtest validated the major league side only. The farm half of
+  the board has had no equivalent test, because minor league acquisitions are
+  not cleanly observable in the transaction feed the way waiver claims are.
 - No write-back. Nobody can mark a player reviewed or dismissed, and nothing is
   logged automatically between runs. The Audit tab exports the current flag list
   as CSV so a forward record can be kept by hand.

@@ -49,7 +49,8 @@ track_record <- function(pl) {
 
 build_payload <- function(txns, teams, people, avail, mlb_needs, farm_needs,
                           fg_players, fg_career, milb_hit, milb_pit,
-                          as_of = AS_OF, span_from = SEASON - (SPAN_YEARS - 1)) {
+                          as_of = AS_OF, span_from = SEASON - (SPAN_YEARS - 1),
+                          plus_cut = NULL, baselines = NULL) {
 
   # ---- players ----
   PL <- list()
@@ -61,9 +62,15 @@ build_payload <- function(txns, teams, people, avail, mlb_needs, farm_needs,
     PL[[k]] <- list(
       n = r$name, p = prof$pos, g = prof$group, a = r$age,
       b = r$bats, t = r$throws,
-      nh = rnd(milb_hit[[k]], list(PA = 0, HR = 0, SB = 0, BBp = 1, Kp = 1)),
+      # raw rates are for display; the *_plus values are what the page grades
+      # on, because a .330 OBP means three different things across six levels
+      nh = rnd(milb_hit[[k]], list(PA = 0, HR = 0, SB = 0, BBp = 1, Kp = 1,
+                                   OBP_plus = 0, SLG_plus = 0, OPS_plus = 0,
+                                   ISO_plus = 0, BBp_plus = 0, Kp_plus = 0)),
       np = rnd(milb_pit[[k]], list(IP = 1, ERA = 2, WHIP = 2, HR9 = 2,
-                                   Kp = 1, BBp = 1, KBBp = 1)),
+                                   Kp = 1, BBp = 1, KBBp = 1,
+                                   ERA_plus = 0, WHIP_plus = 0, HR9_plus = 0,
+                                   Kp_plus = 0, BBp_plus = 0, KBBp_plus = 0)),
       fb = rnd(fg$bat,  list(PA = 0, wRCplus = 0, BBp = 1, Kp = 1,
                              BsR = 1, Def = 1, WAR = 1)),
       fp = rnd(fg$pit,  list(IP = 1, FIP = 2, xFIP = 2, ERA = 2, WHIP = 2,
@@ -110,6 +117,9 @@ build_payload <- function(txns, teams, people, avail, mlb_needs, farm_needs,
     dfaWindow = as.integer(DFA_WINDOW),
     orgs = sort(teams$club[teams$sport_id == MLB_SPORT]),
     mlbNeeds = mlb_needs, farmNeeds = farm_needs,
+    # level-adjusted cutoffs and the league baselines they came from, so the
+    # page can grade a minor leaguer against his own league
+    plusCut = plus_cut, baselines = baselines,
     players = PL, avail = avail, txns = TX, board = board,
     newCount = as.integer(n_new),
     audit = list(

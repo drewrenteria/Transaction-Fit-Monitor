@@ -315,8 +315,38 @@ const NEED_TO_STAT = {
   "OBP":"OBP","SLG":"SLG","OPS":"OPS","ISO":"ISO","BB%":"BBp","K%":"Kp",
   "ERA":"ERA","WHIP":"WHIP","HR/9":"HR9",
   "wRC+":"wRCplus","FIP":"FIP","xFIP":"xFIP",
-  "DRS":"DRS","Def":"Def","BsR":"BsR","Spd":"Spd"
+  "DRS":"DRS","Def":"Def","BsR":"BsR","Spd":"Spd",
+  /* level-adjusted farm metrics */
+  "OBP+":"OBP_plus","SLG+":"SLG_plus","OPS+":"OPS_plus","ISO+":"ISO_plus",
+  "BB%+":"BBp_plus","K%+":"Kp_plus","ERA+":"ERA_plus","WHIP+":"WHIP_plus",
+  "HR/9+":"HR9_plus"
 };
+
+/* A minor league rate is graded against its own league, never against a major
+   league number. league average is 100 and higher is always better, so these
+   cutoffs apply identically in Triple-A and in the complex leagues.
+
+   They are not new numbers: each is the matching MLB threshold above divided
+   by the 2026 MLB league average, computed in R/07_level_adjust.R and shipped
+   in the payload. Whatever stringency was already tuned carries over; it just
+   stops depending on which level a player happened to be standing in. */
+const PLUS_CUT = D.plusCut || null;
+const PLUS_POS = (() => {
+  if(!PLUS_CUT) return null;
+  const mk = o => Object.fromEntries(Object.entries(o||{})
+    .filter(([,v]) => v!=null && !Number.isNaN(v))
+    .map(([k,v]) => [k+"_plus", x => x >= v]));
+  return {hit: mk(PLUS_CUT.hit), pit: mk(PLUS_CUT.pit)};
+})();
+/* A plus value this far below average is a red flag, mirroring the gap
+   between the positive and risk thresholds on the major league side. */
+const PLUS_RISK = (() => {
+  if(!PLUS_CUT) return null;
+  const mk = o => Object.fromEntries(Object.entries(o||{})
+    .filter(([,v]) => v!=null && !Number.isNaN(v))
+    .map(([k,v]) => [k+"_plus", x => x <= 200 - v - 14]));
+  return {hit: mk(PLUS_CUT.hit), pit: mk(PLUS_CUT.pit)};
+})();
 
 function pickLine(pl, scope){
   /* returns {src, hit, pit} choosing MLB or MiLB line per the R rules.
@@ -364,7 +394,12 @@ function evaluate(pl, needs, scope){
             line, thin:`${isPit ? stats.IP.toFixed(1)+" IP" : Math.round(stats.PA)+" PA"}, under the ${floor} ${isPit?"IP":"PA"} minimum to grade`};
   }
 
-  const POS = isPit?PIT_POS:HIT_POS, RISK = isPit?PIT_RISK:HIT_RISK;
+  // A minor league line is graded against its own level, not against MLB.
+  // The farm need plan asks for OBP+ rather than OBP, so the thresholds have
+  // to come from the level-adjusted set or nothing matches at all.
+  const onMiLB = line.src==="MiLB" && PLUS_POS;
+  const POS  = onMiLB ? (isPit?PLUS_POS.pit:PLUS_POS.hit)   : (isPit?PIT_POS:HIT_POS);
+  const RISK = onMiLB ? (isPit?PLUS_RISK.pit:PLUS_RISK.hit) : (isPit?PIT_RISK:HIT_RISK);
   const hits=[], misses=[];
 
   // A strength only counts if it answers a stated need AND rests on enough
@@ -384,7 +419,11 @@ function evaluate(pl, needs, scope){
     const v = stats[key];
     if(v===undefined||v===null) continue;
     if(POS[key] && POS[key](v)){
-      const need = RELIABLE[key] ?? 0;
+      // OBP+ stabilizes exactly when OBP does, so the reliability lookup has
+      // to use the base metric. Without this strip, RELIABLE["OBP_plus"] is
+      // undefined, the floor falls to zero, and every farm rate counts as
+      // solid no matter how few plate appearances it rests on.
+      const need = RELIABLE[key.replace(/_plus$/,"")] ?? 0;
       const meta = {metric:n.metric, key, v, area:n.area, z:n.z, pri:n.pri};
       // Near the stabilization point the rate still carries information, so it
       // counts as thin. Far below it, it carries almost none, so it is dropped
@@ -605,6 +644,8 @@ function upgradeRows(ev, needs, isPit){
 }
 function fmtStat(key, v){
   if(v==null) return "\u2014";
+  // a plus value is an index against its own league: whole numbers, 100 average
+  if(/_plus$/.test(key)) return Math.round(v).toString();
   if(["OBP","SLG","OPS","ISO"].includes(key)) return fAvg(v);
   if(["Kp","BBp","KBBp"].includes(key)) return fPct(v);
   if(["wRCplus","DRS"].includes(key)) return Math.round(v).toString();

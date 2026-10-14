@@ -132,17 +132,20 @@ MLB_NEED_PLAN <- list(
 )
 
 # Farm needs run on the Stats API: FanGraphs has no public minor league
-# leaderboard on this path, so these are unadjusted for park and level.
+# leaderboard on this path. These are level-adjusted -- every rate is expressed
+# against its own league, so 100 is average for the level and higher is always
+# better, whichever direction the raw metric runs. See R/07_level_adjust.R.
+# Still NOT park-adjusted: the Stats API publishes no minor league park factors.
 FARM_NEED_PLAN <- list(
-  list("OBP","OBP","Hitting","On-Base Ability",TRUE,"Hitters with approach and walk skill"),
-  list("SLG","SLG","Hitting","Damage / Power",TRUE,"Extra-base impact"),
-  list("OPS","OPS","Hitting","Overall Offense",TRUE,"Impact bat, on-base plus power"),
-  list("ISO","ISO","Hitting","Game Power",TRUE,"Players with game power"),
-  list("BBp","BB%","Hitting","Plate Discipline",TRUE,"Zone control and walk skill"),
-  list("Kp","K%","Hitting","Contact Ability",FALSE,"Lower-strikeout, bat-to-ball profiles"),
-  list("ERA","ERA","Pitching","Run Prevention",FALSE,"Starters who limit runs"),
-  list("WHIP","WHIP","Pitching","Traffic Prevention",FALSE,"Arms who limit baserunners"),
-  list("Kp","K%","Pitching","Swing and Miss",TRUE,"Bat-missing stuff"),
-  list("BBp","BB%","Pitching","Command",FALSE,"Strike throwers"),
-  list("HR9","HR/9","Pitching","Home Run Suppression",FALSE,"Arms who keep the ball in the park")
+  list("OBP_plus","OBP+","Hitting","On-Base Ability",TRUE,"Hitters with approach and walk skill"),
+  list("SLG_plus","SLG+","Hitting","Damage / Power",TRUE,"Extra-base impact"),
+  list("OPS_plus","OPS+","Hitting","Overall Offense",TRUE,"Impact bat, on-base plus power"),
+  list("ISO_plus","ISO+","Hitting","Game Power",TRUE,"Players with game power"),
+  list("BBp_plus","BB%+","Hitting","Plate Discipline",TRUE,"Zone control and walk skill"),
+  list("Kp_plus","K%+","Hitting","Contact Ability",TRUE,"Lower-strikeout, bat-to-ball profiles"),
+  list("ERA_plus","ERA+","Pitching","Run Prevention",TRUE,"Starters who limit runs"),
+  list("WHIP_plus","WHIP+","Pitching","Traffic Prevention",TRUE,"Arms who limit baserunners"),
+  list("Kp_plus","K%+","Pitching","Swing and Miss",TRUE,"Bat-missing stuff"),
+  list("BBp_plus","BB%+","Pitching","Command",TRUE,"Strike throwers"),
+  list("HR9_plus","HR/9+","Pitching","Home Run Suppression",TRUE,"Arms who keep the ball in the park")
 )

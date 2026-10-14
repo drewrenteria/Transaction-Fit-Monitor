@@ -19,7 +19,8 @@ HERE <- tryCatch(dirname(normalizePath(sub("^--file=", "",
 if (is.na(HERE) || !nzchar(HERE)) HERE <- getwd()
 
 for (f in c("00_config.R", "01_fetch_statsapi.R", "02_fetch_fangraphs.R",
-            "03_needs.R", "04_availability.R", "05_build_payload.R"))
+            "03_needs.R", "04_availability.R", "05_build_payload.R",
+            "07_level_adjust.R"))
   source(file.path(HERE, "R", f))
 
 PROJ_DIR  <<- HERE
@@ -97,44 +98,62 @@ message(sprintf("  FanGraphs crosswalk: %d of %d clubs", length(hit_by_org), nro
 mlb_needs <- build_needs(hit_by_org, pit_by_org, MLB_NEED_PLAN, cap = MAX_MLB_NEEDS_PER_CAT)
 
 # --- 7. farm needs and minor league lines, from the Stats API ---------------
+# Every stint keeps the level it happened at. Summing counting stats across
+# levels and dividing once credits a Double-A line at complex-league
+# difficulty; R/07_level_adjust.R has how far off that runs.
+team_stats <- list()
+for (sid in c(MLB_SPORT, MILB_SPORTS))
+  team_stats[[as.character(sid)]] <- list(
+    hitting  = fetch_team_stats("hitting",  sid),
+    pitching = fetch_team_stats("pitching", sid))
+baselines <- level_baselines(team_stats)
+plus_cut  <- derive_plus_cutoffs(baselines)
+message(sprintf("  league baselines for %d levels (MLB OBP %.3f, Rookie OBP %.3f)",
+                length(baselines), n0(baselines$MLB$hit$OBP), n0(baselines$Rookie$hit$OBP)))
+
 farm_hit_raw <- list(); farm_pit_raw <- list()
 for (sid in MILB_SPORTS) {
+  lv <- unname(LEVEL_BY_SPORT[as.character(sid)])
   for (grp in c("hitting", "pitching")) {
-    st <- fetch_team_stats(grp, sid)
+    st <- team_stats[[as.character(sid)]][[grp]]
     for (tid in names(st)) {
       parent <- teams$parent_org[match(as.integer(tid), teams$team_id)]
       if (is.na(parent)) next
-      if (grp == "hitting") farm_hit_raw[[parent]] <- c(farm_hit_raw[[parent]] %||% list(), list(st[[tid]]))
-      else                  farm_pit_raw[[parent]] <- c(farm_pit_raw[[parent]] %||% list(), list(st[[tid]]))
+      e <- list(level = lv, stat = st[[tid]])
+      if (grp == "hitting") farm_hit_raw[[parent]] <- c(farm_hit_raw[[parent]] %||% list(), list(e))
+      else                  farm_pit_raw[[parent]] <- c(farm_pit_raw[[parent]] %||% list(), list(e))
     }
   }
 }
-farm_hit <- lapply(farm_hit_raw, aggregate_stats, kind = "hit")
-farm_pit <- lapply(farm_pit_raw, aggregate_stats, kind = "pit")
+farm_hit <- lapply(farm_hit_raw, org_farm_plus, baselines = baselines, kind = "hit")
+farm_pit <- lapply(farm_pit_raw, org_farm_plus, baselines = baselines, kind = "pit")
 farm_needs <- build_needs(farm_hit, farm_pit, FARM_NEED_PLAN, cap = MAX_FARM_NEEDS_PER_CAT)
 message(sprintf("  needs per club: %.1f major league, %.1f farm",
                 mean(lengths(mlb_needs)), mean(lengths(farm_needs))))
 
-# minor league player lines, aggregated across levels
+# minor league player lines, each stint scored against its own level
 milb_hit <- list(); milb_pit <- list()
 for (sid in MILB_SPORTS) {
+  lv <- unname(LEVEL_BY_SPORT[as.character(sid)])
   for (grp in c("hitting", "pitching")) {
     for (sp in fetch_leaderboard(grp, sid)) {
       pid <- nn(sp$player$id); if (is.null(pid) || is.na(pid)) next
       k <- as.character(as.integer(pid))
-      if (grp == "hitting") milb_hit[[k]] <- c(milb_hit[[k]] %||% list(), list(sp$stat))
-      else                  milb_pit[[k]] <- c(milb_pit[[k]] %||% list(), list(sp$stat))
+      e <- list(level = lv, stat = sp$stat)
+      if (grp == "hitting") milb_hit[[k]] <- c(milb_hit[[k]] %||% list(), list(e))
+      else                  milb_pit[[k]] <- c(milb_pit[[k]] %||% list(), list(e))
     }
   }
 }
-milb_hit <- lapply(milb_hit, aggregate_stats, kind = "hit")
-milb_pit <- lapply(milb_pit, aggregate_stats, kind = "pit")
+milb_hit <- lapply(milb_hit, combine_stints, baselines = baselines, kind = "hit")
+milb_pit <- lapply(milb_pit, combine_stints, baselines = baselines, kind = "pit")
 message(sprintf("  minor league lines: %d hitters, %d pitchers",
                 length(milb_hit), length(milb_pit)))
 
 # --- 8. assemble and write ---------------------------------------------------
 payload <- build_payload(window_tx, teams, people, avail, mlb_needs, farm_needs,
-                         fg_play, fg_car, milb_hit, milb_pit, as_of = AS_OF)
+                         fg_play, fg_car, milb_hit, milb_pit, as_of = AS_OF,
+                         plus_cut = plus_cut, baselines = baselines)
 if (snapshot) {
   payload$snapshot <- TRUE
   payload$asOf <- as.character(AS_OF)
