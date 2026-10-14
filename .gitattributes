@@ -1,0 +1,10 @@
+# GitHub decides a repo's language by counting bytes, not by reading it. The
+# Python reference is slightly larger than the R pipeline, so without this the
+# repo is labelled Python when the pipeline it ships is R.
+#
+# python/ is a reference implementation kept for validation and the backtest;
+# python/README.md says as much. template.html is a page template filled in by
+# R/05_build_payload.R rather than hand-authored source.
+
+python/**     linguist-vendored
+template.html linguist-detectable=false
