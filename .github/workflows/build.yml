@@ -5,6 +5,13 @@ on:
     - cron: "17 11 * * *"      # daily, deliberately off the hour
   workflow_dispatch:
 
+# The default GITHUB_TOKEN is read-only on this repo, so the auto-commit step
+# came back with "Permission to ... denied to github-actions[bot]" and a 403.
+# Everything before it worked: R installed, the build ran, docs/index.html was
+# written. It just could not push the result.
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,3 +43,7 @@ jobs:
         with:
           commit_message: "Daily rebuild"
           file_pattern: docs/index.html
+          # without this the daily commits land as github-actions[bot]
+          commit_author: Andrew Renteria <drewrenteria9@gmail.com>
+          commit_user_name: Andrew Renteria
+          commit_user_email: drewrenteria9@gmail.com
