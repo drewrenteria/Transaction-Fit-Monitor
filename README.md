@@ -20,12 +20,10 @@ minor league combined. Almost all of them are noise. A handful put somebody on
 the market who could actually help your club, and finding those means reading
 the whole feed.
 
-This reads it for you. It works out who is genuinely gettable right now, then
+This narrows that down by working out who is genuinely obtainable right now, then
 sorts that list by whether a player's production answers a hole your
 organization actually has. The point is to turn a thousand rows into a dozen
 names worth a human look, not to make the call for anyone.
-
-Built for people with ninety seconds.
 
 ![status](https://img.shields.io/badge/status-working-brightgreen)
 ![R](https://img.shields.io/badge/built%20with-R-276DC3)
