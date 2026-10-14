@@ -189,6 +189,26 @@ confidence ("strong match").
 That test is weaker than it looks, though. It asks whether good players are
 good, which is not the claim this tool makes.
 
+### Pre-registration
+
+The need-fit test below grades players three ways, because there are three
+defensible answers to "what could the club have known that day".
+
+| arm | graded on | asks |
+|---|---|---|
+| 1 | 2024-25 only | pre-determined and stable, immune to the player's current slump |
+| 2 | 2026 up to the acquisition date | the information the club actually had |
+| **3** | **the dashboard's own rule: 2026 primary, 2024-25 backing a thin sample** | **does the tool as shipped carry signal** |
+
+**Arm 3 is the primary test.** It is the only one that grades a player the way
+`template.html` grades him, so it is the only one that tests the product rather
+than a near relative of it. Arms 1 and 2 are robustness checks. If all three
+agree the finding is solid; if only one moves, that is a result about that arm
+and is reported as such, not promoted.
+
+This section was committed before the arm 2 and arm 3 numbers existed. The git
+history shows the order.
+
 ### Test two: do the needs predict *which* club takes him?
 
 `needfit_test.R`, and this is the claim that matters. For every 2026
