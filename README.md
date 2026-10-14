@@ -1,5 +1,19 @@
 # Transaction Fit Monitor
 
+**[Open the live dashboard →](https://drewrenteria.github.io/Transaction-Fit-Monitor/)**
+
+[![Transaction Fit Monitor](docs/preview.png)](https://drewrenteria.github.io/Transaction-Fit-Monitor/)
+
+*Viewed as the Pittsburgh Pirates. Pick any of the thirty clubs from the
+dropdown and the whole page re-scores instantly. Rebuilds itself daily.*
+
+There is also a **[point-in-time rebuild of July 4, 2026](https://drewrenteria.github.io/Transaction-Fit-Monitor/snapshot-2026-07-04.html)**,
+frozen mid-season so the claim clocks are live: transactions, FanGraphs rates
+and the seven-day DFA window are all bounded to that date, nothing from after it
+leaks in.
+
+---
+
 A single-file HTML dashboard that shows what is happening on the player market
 across Major League Baseball and which of those players answer a specific
 organization's weaknesses.
@@ -14,7 +28,7 @@ anywhere regardless of fit.
 ## What it does
 
 - Pulls every transaction league-wide, major and minor, from the MLB Stats API
-- Works out who is **actually obtainable today** by walking each player's event
+- Works out who is **actually gettable today** by walking each player's event
   sequence, so a player who was designated and then claimed drops off the board
 - Runs a claim clock on designations, since that decision expires
 - Flags each club's real weaknesses using rank **and** distance from league
@@ -75,9 +89,31 @@ same as a .170 ISO in Triple-A.
 
 ## Things that will bite you
 
-**`typeCode` "DFA" means Declared Free Agency, not Designated for Assignment.**
-Designated for Assignment is `DES`. Mapping `DFA -> DFA` looks obviously correct
-and quietly fills the acquisition list with free agents.
+**The Stats API code for Designated for Assignment is `DES`, not `DFA`.**
+`DFA` is taken: it is the code for *Declared Free Agency*, the separate and far
+rarer event where a player with the service time to do so elects free agency
+after an outright. MLB's own `typeDesc` strings, counted over six weeks of the
+2026 feed:
+
+| `typeCode` | `typeDesc` | events |
+|---|---|---|
+| `DES` | Designated for Assignment | 123 |
+| `DFA` | Declared Free Agency | 2 |
+
+Mapping `DFA -> DFA` looks obviously correct, and quietly drops every real
+designation while filling the board with free agents.
+
+**Market-closing events arrive under more than one code.** A signing is `SFA`
+when it is logged as a free agent signing and `SGN` when it is not; an
+independent-league pickup is `ACQ` or `OBT`; a player coming back off a loan is
+`RTN`. Any code left unmapped falls through as "Other" and can never close a
+listing, which is how a player another club already signed would keep showing
+as available. In the 2026 feed these four happen to close nobody who was on the
+board — `SFA` already covers the affiliated path, and the rest are players
+arriving from outside affiliated ball — but that is luck, not design. The Audit
+tab counts unmapped types so the next unmapped code gets noticed before it
+matters. What is left in "Other" now is suspensions, which genuinely belong in
+neither bucket.
 
 **`playerPool=All` on Stats API leaderboards.** The default returns only
 qualified players: 46 major league pitchers instead of 868.

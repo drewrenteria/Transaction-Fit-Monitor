@@ -12,13 +12,16 @@ and will not bound by date, so the farm side carries later-season information.
 That is flagged in the build and on the page rather than papered over.
 """
 import json, pathlib, datetime, sys, time, urllib.request, collections
+import os
 
-BUILD = pathlib.Path("/home/claude/build")
 AS_OF = datetime.date.fromisoformat(sys.argv[1] if len(sys.argv) > 1 else "2026-07-04")
 DAYS_BACK = 14
 UA = {"User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
                      "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124 Safari/537.36")}
 FGB = "https://www.fangraphs.com/api/leaders/major-league/data"
+BUILD = pathlib.Path(os.environ.get("BUILD_DIR")
+                    or pathlib.Path(__file__).resolve().parent.parent / "build")
+
 CACHE = BUILD / "cache"; CACHE.mkdir(exist_ok=True)
 
 

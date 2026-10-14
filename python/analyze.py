@@ -1,14 +1,18 @@
 """Compute per-org needs and compact player/transaction payload for the dashboard."""
 import json, pathlib, statistics as st
 
-import os as _os
+import os
+
 # Snapshot mode rebuilds the page as of a past date. Everything that can be
 # bounded to that date is: the transaction feed, FanGraphs team and player
 # rates, the career line (2024-25 only, so no 2026 leakage) and the clock.
-SNAP = _os.environ.get("SNAP_FILE")
-OUT_NAME = _os.environ.get("OUT_NAME", "payload.json")
+SNAP = os.environ.get("SNAP_FILE")
+OUT_NAME = os.environ.get("OUT_NAME", "payload.json")
 
-D = json.loads(pathlib.Path("/home/claude/build/data.json").read_text())
+BUILD = pathlib.Path(os.environ.get("BUILD_DIR")
+                    or pathlib.Path(__file__).resolve().parent.parent / "build")
+
+D = json.loads((BUILD / "data.json").read_text())
 if SNAP:
     _S = json.loads(pathlib.Path(SNAP).read_text())
     D["txns"] = _S["hist"]            # full history to as-of, for the walk
@@ -242,12 +246,12 @@ def build_needs(hit_by_org, pit_by_org, plan=None, cap=None):
 # park- and league-adjusted, which raw Stats API rates are not. FanGraphs has
 # no public minor league leaderboard on this path, so the farm side below stays
 # on the Stats API.
-FG = json.loads(pathlib.Path("/home/claude/build/fg.json").read_text())
+FG = json.loads((BUILD / "fg.json").read_text())
 if SNAP:
     # date-bounded team and player rates; career line is 2024-25 only
     FG["teamBat"], FG["teamPit"], FG["teamFld"] = _S["teamBat"], _S["teamPit"], _S["teamFld"]
     FG["players"] = _S["players"]
-    FG["career"] = json.loads(pathlib.Path("/home/claude/build/prior2425.json").read_text())
+    FG["career"] = json.loads((BUILD / "prior2425.json").read_text())
     FG["spanFrom"] = 2024
     D["people"] = _S["people"]      # bios for this snapshot's own population
 
@@ -611,7 +615,7 @@ payload = {
 # Fold in the backtest if it has been run. Doing this inside the build keeps
 # the pipeline idempotent: re-running analyze no longer silently drops the
 # Track record tab, which is exactly what happened when this was a side script.
-bt_path = pathlib.Path("/home/claude/build/backtest.json")
+bt_path = (BUILD / "backtest.json")
 if bt_path.exists():
     import math
     B = json.loads(bt_path.read_text())
@@ -681,7 +685,7 @@ if SNAP:
                          "bound them by date, so the farm side carries later information.")
     payload.pop("backtest", None)
 
-out = pathlib.Path("/home/claude/build/" + OUT_NAME)
+out = (BUILD / OUT_NAME)
 out.write_text(json.dumps(payload, separators=(",", ":")))
 print(f"payload {out.stat().st_size/1e6:.2f} MB")
 print("MLB need flags per org  avg", payload["audit"]["mlbNeedAvg"],

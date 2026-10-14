@@ -41,22 +41,38 @@ already keeps `cache/` and `output/` out, so nothing fetched gets committed.
 
 ## Let people see the dashboard without running it
 
-GitHub will not render a raw HTML file, so commit one example build and turn on
-Pages:
+GitHub will not render a raw HTML file from the repo view, so the browsable
+copies are committed under `docs/`, which is what Pages serves:
 
-```bash
-mkdir -p docs
-cp output/transaction_fit_dashboard_2026-07-04.html docs/index.html
-git add -f docs/index.html          # -f because output/ is ignored, docs/ is not
-git commit -m "Add example build for GitHub Pages"
-git push
+```
+docs/index.html                  current build, replaced by the daily workflow
+docs/snapshot-2026-07-04.html    frozen mid-season example, claim clocks live
+docs/preview.png                 the screenshot the README leads with
 ```
 
-Then Settings → Pages → Source: `main`, folder `/docs`. It goes live at
-`https://<you>.github.io/transaction-fit-monitor/` in a minute or two.
+Those are already in the repo. All that is left is **Settings → Pages →
+Source: `main`, folder `/docs`**. It goes live at
+`https://<you>.github.io/<repo>/` in a minute or two.
+
+Two things worth doing while you are in Settings:
+
+- **About → Website** (the gear beside the description on the repo home page):
+  paste the Pages URL so a clickable link sits in the sidebar.
+- **Settings → Features**: untick Issues, Projects and Wikis unless you want
+  them. On a portfolio repo they are empty tabs.
+
+Pages will only serve while the repo is **public**. On a Free or Pro account
+there is no middle setting: a private repo's Pages site is simply off, and
+there is no link-only sharing the way Google Drive does it. Access-controlled
+Pages exists, but only on GitHub Enterprise Cloud. If the repo must stay
+private, send people the HTML file itself instead — it is self-contained and
+opens offline.
 
 A live link is worth real money on an application. A hiring manager will click
 it; they will not clone a repo and install R.
+
+The README screenshot is a point in time; the daily workflow will move
+`index.html` on past it. Regenerate it whenever you want them back in step.
 
 ## Keeping it fresh without a server
 

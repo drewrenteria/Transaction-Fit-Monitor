@@ -15,8 +15,11 @@ Method, and the reason it is honest:
   whether those players went on to perform. That needs another season.
 """
 import json, pathlib, datetime, collections
+import os
 
-BUILD = pathlib.Path("/home/claude/build")
+BUILD = pathlib.Path(os.environ.get("BUILD_DIR")
+                    or pathlib.Path(__file__).resolve().parent.parent / "build")
+
 TX = json.loads((BUILD / "tx2026.json").read_text())
 PRIOR = {int(k): v for k, v in json.loads((BUILD / "prior2425.json").read_text()).items()}
 

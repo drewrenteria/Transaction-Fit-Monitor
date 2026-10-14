@@ -1,8 +1,12 @@
 """Pull everything the dashboard needs from the MLB Stats API, cache to JSON."""
 import json, urllib.request, pathlib, datetime, sys, time
+import os
 
 B = "https://statsapi.mlb.com/api/v1"
-CACHE = pathlib.Path("/home/claude/build/cache")
+BUILD = pathlib.Path(os.environ.get("BUILD_DIR")
+                    or pathlib.Path(__file__).resolve().parent.parent / "build")
+
+CACHE = BUILD / "cache"
 CACHE.mkdir(parents=True, exist_ok=True)
 SEASON = 2026
 DAYS_BACK = 14
@@ -166,7 +170,7 @@ def main():
     out["roster40"] = roster40
     print(f"  {len(roster40)} players on 40-man rosters")
 
-    p = pathlib.Path("/home/claude/build/data.json")
+    p = (BUILD / "data.json")
     p.write_text(json.dumps(out))
     print(f"\nwrote {p} ({p.stat().st_size/1e6:.1f} MB)")
 

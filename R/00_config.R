@@ -77,18 +77,25 @@ FG_ABBR <- c("TB" = "TBR", "SD" = "SDP", "SF" = "SFG", "WSH" = "WSN",
 FG_NICK <- c("D-backs" = "Diamondbacks")
 
 # --- transaction vocabulary --------------------------------------------------
-# WARNING: Stats API typeCode "DFA" means Declared Free Agency. Designated for
-# Assignment is "DES". Mapping DFA -> DFA silently fills the acquisition list
-# with free agents.
+# WARNING: the Stats API typeCode that means Designated for Assignment is
+# "DES", not "DFA". "DFA" is the code for Declared Free Agency, which is the
+# separate (and much rarer) event where a player with the service time to do so
+# elects free agency. Mapping DFA -> DFA looks obviously right and silently
+# fills the board with free agents while dropping every real designation.
 TYPE_MAP <- c(DES = "DFA", CLW = "Claimed", REL = "Released", OUT = "Outrighted",
-              TR = "Trade", SFA = "Signed", SE = "Selected Contract",
+              TR = "Trade", SFA = "Signed", SGN = "Signed", SE = "Selected Contract",
               OPT = "Option", CU = "Recall", DFA = "Declared Free Agency",
+              ACQ = "Acquired", OBT = "Acquired", RTN = "Returned",
               RET = "Retired")
 
 MARKET_OPEN  <- c("DFA", "Released", "Declared Free Agency")
+# Every one of these means somebody already has him. "Signed" arrives under two
+# codes: SFA for a free agent signing and SGN for a plain signing. Leaving SGN
+# unmapped left released players on the board after another club signed them.
 MARKET_CLOSE <- c("Claimed", "Signed", "Trade", "Selected Contract",
                   "Purchased Contract", "Outrighted", "Recall", "Option",
-                  "Activated", "Assigned", "Rehab Assignment", "Retired")
+                  "Activated", "Assigned", "Rehab Assignment", "Acquired",
+                  "Returned", "Retired")
 MLB40_EVENTS <- c("DFA", "Claimed", "Trade", "Selected Contract",
                   "Purchased Contract", "Recall", "Option", "Outrighted")
 

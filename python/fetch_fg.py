@@ -8,8 +8,12 @@ FanGraphs has no public minor league leaderboard on this path (404), so the
 farm side stays on the Stats API. That is a real limitation, not an oversight.
 """
 import json, re, time, pathlib, urllib.request, urllib.error
+import os
 
-CACHE = pathlib.Path("/home/claude/build/cache"); CACHE.mkdir(parents=True, exist_ok=True)
+BUILD = pathlib.Path(os.environ.get("BUILD_DIR")
+                    or pathlib.Path(__file__).resolve().parent.parent / "build")
+
+CACHE = BUILD / "cache"; CACHE.mkdir(parents=True, exist_ok=True)
 SEASON = 2026
 BASE = "https://www.fangraphs.com/api/leaders/major-league/data"
 UA = {"User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
@@ -182,7 +186,7 @@ def main():
     out = {"teamBat": team_bat, "teamPit": team_pit, "teamFld": team_fld,
            "players": players, "career": career,
            "season": SEASON, "spanFrom": SPAN_FROM}
-    p = pathlib.Path("/home/claude/build/fg.json")
+    p = (BUILD / "fg.json")
     p.write_text(json.dumps(out))
     print(f"wrote {p} ({p.stat().st_size/1e6:.1f} MB)")
 
