@@ -38,12 +38,16 @@ another club just signed drops off, and a man designated three weeks ago and
 never claimed is still on it with his clock showing. That is checkable against
 the feed and it is right.
 
-**Fit is a first-pass sort, not a prediction.** A backtest over the 2026 season
-found no significant relationship between how this grades a player and whether
-anyone actually acquired him. So the labels state what was computed ("clears 2
-of 3 needs") instead of implying confidence ("strong match"), and the work they
-do is narrowing the list, not ranking it for a decision. The read still belongs
-to the reader. [Honest limitations](#honest-limitations) has the numbers.
+**Fit is a first-pass sort, not a prediction.** Two backtests say the coarse
+signal is real and the fine one is not. Clubs do acquire players in the
+category they are short in, measurably more often than chance (76.0% against a
+68.5% base rate, p = 0.0099). But *which* player they take inside that category
+has no relationship to how many specific metrics he clears. So the labels state
+what was computed ("clears 2 of 3 needs") instead of implying confidence
+("strong match"), and the work they do is narrowing the list, not ranking it
+for a decision. The read still belongs to the reader.
+[Does any of this work?](#does-any-of-this-work) has the numbers and the
+caveats.
 
 ## What it does
 
@@ -87,6 +91,8 @@ R/04_availability.R          market status, claim clock, acquisition path
 R/05_build_payload.R         assemble JSON, write the HTML
 template.html                the page; reads the payload and scores fit in-browser
 
+R/06_needfit_test.R          the need-fit backtest: does need predict the buyer?
+needfit_test.R               runs it
 python/                      reference implementation, not the pipeline
 validate.R                   diffs the R payload against that reference
 ```
@@ -168,17 +174,91 @@ because the sample is small. Rates are credited in tiers by where they
 stabilize, and red flags are deliberately not gated the same way: missing a
 decent player costs less than surfacing a bad one.
 
+## Does any of this work?
+
+Two backtests, and they disagree in a way that is worth understanding.
+
+### Test one: do the labels predict that anyone wants the player?
+
+`python/backtest.py`. Every player who hit the market in 2026, graded using
+only his 2024-25 line, then checked against whether another club picked him up.
+**No significant relationship, on any outcome including waiver claims.** So the
+labels state what was computed ("clears 2 of 3 needs") rather than implying
+confidence ("strong match").
+
+That test is weaker than it looks, though. It asks whether good players are
+good, which is not the claim this tool makes.
+
+### Test two: do the needs predict *which* club takes him?
+
+`needfit_test.R`, and this is the claim that matters. For every 2026
+acquisition where a club picked up a player another club had let go, score that
+player against the acquiring club's needs **and against all 29 others', as of
+the same date**. Same player, same week, same market, so player quality is held
+constant by construction. Under the null the acquirer lands mid-pack.
+
+**Clubs match to need at the category level.**
+
+| | acquirer | base rate | lift | p |
+|---|---|---|---|---|
+| Had a flagged need in his category | 0.760 | 0.685 | **+0.075** | **0.0099** |
+
+**But inside a category, the metric-level scoring is worthless.** Among clubs
+that needed pitching, which pitcher they took had nothing to do with how well
+his rates answered the specific flagged metric:
+
+| | acquirer percentile | p |
+|---|---|---|
+| All 30 clubs ranked | 0.511 | 0.55 |
+| Only clubs needing his category | 0.501 | 0.95 |
+
+**And the effect lives in deliberate moves, not depth signings** (exploratory,
+not pre-registered):
+
+| route | n | acquirer | base | lift |
+|---|---|---|---|---|
+| Trade | 41 | 0.829 | 0.644 | +0.185 |
+| Claimed off waivers | 60 | 0.817 | 0.687 | +0.129 |
+| Signed as free agent | 124 | 0.710 | 0.698 | +0.012 |
+
+Trades and claims cost something: a prospect, a 40-man spot, waiver priority.
+Those track need. In-season free agent signings are organizational depth and
+track nothing.
+
+### What that means for this dashboard
+
+The coarse signal is real and the fine signal is not. Grouping available
+players by the category a club is short in is doing honest work. Ranking them
+by how many specific metrics they clear is not, and the labels are worded to
+promise only the former.
+
+### What would undercut this
+
+- **Shared cause, not need-matching.** A club with a worn-out bullpen has both
+  a flagged pitching need and an urgent roster hole. The need flag may be
+  measuring the same thinness that forces the move, rather than any club
+  consulting anything need-like. This design cannot separate the two.
+- One season, n=225, and the route splits are small enough to be noise.
+- Needs are rebuilt on a 14-day grid, so they are up to 13 days stale.
+- Players are graded on their prior-season line, so a 2026 breakout is invisible.
+  Realistic for a waiver decision, still a limitation.
+
+### A flaw worth recording
+
+The first version of the need-fit test excluded clubs with no flagged need in
+the player's category, on the reasoning that "could not answer" is not "failed
+to answer." That dropped **every pitcher** — 174 of 302 acquisitions — because
+only about half of clubs carry a pitching need in a given week, so no pitcher
+ever had a large enough comparison set. The test ran on position players alone
+and returned a tidy null.
+
+Scoring those clubs zero instead is both more correct, since a club with no
+pitching need genuinely needs nothing a pitcher offers, and the thing that let
+the majority of the sample back in. The finding above only exists because that
+got caught. Both measures are still reported.
+
 ## Honest limitations
 
-- **The labels are not validated.** A backtest over the 2026 season, grading
-  every player who hit the market using only his prior-season line, found no
-  significant relationship between the labels and whether anyone picked him up,
-  on any outcome including waiver claims. The labels therefore describe what
-  was computed ("clears 2 of 3 needs") rather than grade confidence
-  ("strong match"). `python/backtest.py` reproduces this.
-- That backtest tested whether a player is good in general, not whether he fits
-  one club's specific hole, which is the narrower thing this tool claims.
-  Testing that needs point-in-time club needs for each past date.
 - The farm side is unadjusted for park and level.
 - No write-back. Nobody can mark a player reviewed or dismissed, and nothing is
   logged automatically between runs. The Audit tab exports the current flag list
