@@ -67,7 +67,18 @@ R/03_needs.R                 z-score need detection
 R/04_availability.R          market status, claim clock, acquisition path
 R/05_build_payload.R         assemble JSON, write the HTML
 template.html                the page; reads the payload and scores fit in-browser
+
+python/                      reference implementation, not the pipeline
+validate.R                   diffs the R payload against that reference
 ```
+
+**Why there is Python in an R repo.** The project was prototyped in Python and
+then ported. The prototype is kept rather than deleted for two reasons: it
+produces the same payload shape, so a suspicious R result can be diffed against
+a second implementation instead of being argued about (`validate.R` does this,
+and it is how the missing-bios bug below was caught), and `backtest.py` holds
+the threshold validation, which was never ported. Nothing in `python/` runs
+during a build.
 
 The page computes fit in the browser from one shipped dataset. That is why
 switching organizations is instant rather than reloading: the data ships once
@@ -122,6 +133,15 @@ qualified players: 46 major league pitchers instead of 868.
 **FanGraphs keys fielding on nickname, batting and pitching on abbreviation,**
 and its abbreviations differ from MLB's for seven clubs. The crosswalk is in
 `00_config.R`; it warns loudly if a club fails to resolve.
+
+**Fetch the bios for everyone on the market, not everyone in the window.** An
+earlier version pulled player bios only for the fourteen-day transaction
+window, which quietly dropped 127 available players: a man designated three
+weeks ago is still on the market today but has no transaction inside the
+window, so he arrived with no position and fell out of the board without an
+error anywhere. `build.R` fetches the union of the two sets. This is the bug
+`validate.R` was written to catch, and it is the reason the Python reference is
+still in the repo.
 
 **Sample size cuts both ways.** Only good numbers get flagged, so an ungated
 small sample fills the board with players whose rates look strong precisely
