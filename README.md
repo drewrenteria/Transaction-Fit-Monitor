@@ -15,16 +15,35 @@ leaks in.
 
 ---
 
-A single-file HTML dashboard that shows what is happening on the player market
-across Major League Baseball and which of those players answer a specific
-organization's weaknesses.
+About a thousand transactions clear league-wide in a two-week window, major and
+minor league combined. Almost all of them are noise. A handful put somebody on
+the market who could actually help your club, and finding those means reading
+the whole feed.
 
-Built for people with ninety seconds. It opens on a brief: the best fit for
-your club, who is new to the market this week, and the best players available
-anywhere regardless of fit.
+This reads it for you. It works out who is genuinely gettable right now, then
+sorts that list by whether a player's production answers a hole your
+organization actually has. The point is to turn a thousand rows into a dozen
+names worth a human look, not to make the call for anyone.
+
+Built for people with ninety seconds.
 
 ![status](https://img.shields.io/badge/status-working-brightgreen)
 ![R](https://img.shields.io/badge/built%20with-R-276DC3)
+
+### What this is confident about, and what it is not
+
+**Availability is the solid half.** Each player's transaction history is walked
+in order, so a man designated and then claimed drops off the board, a man
+another club just signed drops off, and a man designated three weeks ago and
+never claimed is still on it with his clock showing. That is checkable against
+the feed and it is right.
+
+**Fit is a first-pass sort, not a prediction.** A backtest over the 2026 season
+found no significant relationship between how this grades a player and whether
+anyone actually acquired him. So the labels state what was computed ("clears 2
+of 3 needs") instead of implying confidence ("strong match"), and the work they
+do is narrowing the list, not ranking it for a decision. The read still belongs
+to the reader. [Honest limitations](#honest-limitations) has the numbers.
 
 ## What it does
 
