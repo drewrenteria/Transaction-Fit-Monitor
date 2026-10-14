@@ -185,6 +185,14 @@ tbody tr:hover td{background:#FAFAF7}
 .gap{display:inline-block;width:62px;height:5px;background:var(--sunk);
   border:1px solid var(--rule);vertical-align:middle;margin-left:7px;position:relative}
 .gap i{position:absolute;left:0;top:0;bottom:0;background:var(--hi);display:block}
+.lowwrap{margin:4px 0 24px;border-top:1px solid var(--rule);padding-top:12px}
+.lowwrap summary{cursor:pointer;font-size:13px;color:var(--ink2);
+  list-style:none;display:flex;align-items:center;gap:6px}
+.lowwrap summary::-webkit-details-marker{display:none}
+.lowwrap summary::before{content:"\25B8";color:var(--ink3);font-size:11px}
+.lowwrap[open] summary::before{content:"\25BE"}
+.lowwrap summary:hover{color:var(--ink)}
+.lowwrap .note{margin:10px 0 12px}
 .fitgrp{margin:0 0 26px}
 .fghead{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
   padding:0 0 7px;border-bottom:2px solid var(--rule);margin:0 0 2px}
@@ -564,9 +572,22 @@ D.txns.forEach(t=>{ if(t.pid) (byId[t.pid]=byId[t.pid]||[]).push(t); });
 
 const WAS_ON_MARKET = new Set(["Claimed","Signed elsewhere","Traded",
                                "Stayed in org","Window lapsed","Resolved"]);
+/* Rookie and complex ball is kept off the main board. Measured over 2026, a
+   player who hits the market at that level is acquired by another club about
+   3% of the time, against 32% in the majors and 26% in Triple-A -- yet that
+   level supplied roughly a third of everyone shown, crowding out the names
+   actually in play. They are listed in a collapsed section with the rate
+   stated rather than deleted, because twelve of them did get taken. */
+const LOW_SIGNAL = new Set(D.lowSignalLevels || []);
+const isLowSignal = a => LOW_SIGNAL.has(a && a.lvl);
+function acqRate(lvl){
+  const r = D.acqRates && D.acqRates[lvl];
+  return r ? r : null;
+}
+
 function computeFlagged(org){
   const mlbNeeds = D.mlbNeeds[org]||[], farmNeeds = D.farmNeeds[org]||[];
-  const out = {mlb:[], farm:[], mlbNeeds, farmNeeds, gone:[]};
+  const out = {mlb:[], farm:[], mlbNeeds, farmNeeds, gone:[], low:[]};
 
   // Only players who are actually gettable today. A player who was DFA'd and
   // then claimed, signed elsewhere, or outrighted back into his own org is not
@@ -582,7 +603,11 @@ function computeFlagged(org){
     const ev = evaluate(pl, needs, scope);
     if(ev.cls!=="Strong" && ev.cls!=="Possible") continue;
     const rec = {pid, a, pl, ev, scope};
-    if(a.avail){ out[scope==="MLB"?"mlb":"farm"].push(rec); }
+    if(a.avail){
+      // low-signal levels go to their own list, out of the headline counts
+      if(isLowSignal(a)) out.low.push(rec);
+      else out[scope==="MLB"?"mlb":"farm"].push(rec);
+    }
     else if(WAS_ON_MARKET.has(a.st)){
       // Only players who were genuinely available and have since been taken.
       // Someone who was merely activated or optioned was never an opportunity.
@@ -602,7 +627,7 @@ function computeFlagged(org){
     || (lv(x)-lv(y))
     || ((x.a.days==null?99:x.a.days) - (y.a.days==null?99:y.a.days))
     || (y.a.since < x.a.since ? -1 : 1);
-  out.mlb.sort(order); out.farm.sort(order); out.gone.sort(order);
+  out.mlb.sort(order); out.farm.sort(order); out.gone.sort(order); out.low.sort(order);
   return out;
 }
 
@@ -795,7 +820,9 @@ function render(){
 
   // flagged
   // ---- Brief: the league half and the fit half on one screen ----
-  const board = D.board || [];
+  // same filter as the fits: rookie and complex ball is not a live market
+  const board = (D.board || []).filter(b=>!LOW_SIGNAL.has(b.lvl));
+  const boardLow = (D.board || []).filter(b=>LOW_SIGNAL.has(b.lvl));
   const topFit = (F.mlb[0] || F.farm[0]);
   const topName = board[0];
   const newOnes = board.filter(b=>b.new);
@@ -853,10 +880,35 @@ function render(){
     }).join("");
   }
 
+  // Rookie and complex ball, collapsed. Off the main board because almost
+  // nobody there is actually gettable, present because a few are.
+  function lowSection(){
+    if(!F.low.length) return "";
+    const lvls = [...new Set(F.low.map(r=>r.a.lvl))].filter(Boolean);
+    const rate = lvls.map(l=>acqRate(l)).find(Boolean);
+    const why = rate
+      ? `Over this window ${rate.acquired} of ${rate.opened} players who reached the market at this level were picked up by another club, ${(100*rate.rate).toFixed(0)}%.`
+      : `Almost nobody who reaches the market at this level is picked up by another club.`;
+    return `<details class="lowwrap">
+      <summary>${F.low.length} more fit a need at ${esc(lvls.join(" / ") || "rookie level")}, kept off the board</summary>
+      <p class="note">${why} They are here so the board is complete, not because they are live options.</p>
+      <div class="tscroll"><table><thead><tr>
+        <th>Player</th><th>Pos</th><th>Level</th><th>Answers</th><th>On market</th>
+      </tr></thead><tbody>
+      ${F.low.slice(0,20).map(r=>`<tr>
+        <td><a href="https://www.mlb.com/player/${r.pid}" target="_blank" rel="noopener" style="color:inherit">${esc(r.pl.n)}</a></td>
+        <td>${esc(r.pl.p||"")}</td><td>${esc(r.a.lvl||"")}</td>
+        <td class="fgdetail">${esc(r.ev.need||"")}</td>
+        <td class="num">${r.a.onMarketDays}d</td></tr>`).join("")}
+      </tbody></table></div>
+    </details>`;
+  }
+
   if(need("brief")) document.getElementById("p-brief").innerHTML = `
     <h2>Fits for ${esc(org)}</h2>
     <p class="note">Grouped by the hole each player speaks to. A backtest across the 2026 season found clubs do acquire in the category they are short in, measurably more often than chance, but that how many specific metrics a player clears carries no signal. So the grouping leads and the count below each name is detail, not a ranking.</p>
     ${total ? fitGroups() : `<div class="empty">No player on the market answers a flagged need for ${esc(org)} right now.</div>`}
+    ${lowSection()}
 
     <h2>New in the last 7 days</h2>
     ${newOnes.length

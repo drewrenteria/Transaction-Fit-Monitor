@@ -57,6 +57,11 @@ message(sprintf("  %d transactions in history, %d in the %d-day window",
 roster40 <- fetch_roster40(mlb_teams$team_id)
 avail <- build_availability(txns, as_of = AS_OF, roster40 = roster40)
 avail <- mark_new_entrants(avail, txns, as_of = AS_OF, days = 7L)
+acq_rates <- acquisition_rates(txns)
+for (lv in names(acq_rates))
+  message(sprintf("    %-10s %3d hit the market, %3d acquired (%.1f%%)", lv,
+                  acq_rates[[lv]]$opened, acq_rates[[lv]]$acquired,
+                  100 * acq_rates[[lv]]$rate))
 on_market <- names(avail)[vapply(avail, function(a) isTRUE(a$avail), logical(1))]
 message(sprintf("  %d of %d players on the market", length(on_market), length(avail)))
 
@@ -153,7 +158,8 @@ message(sprintf("  minor league lines: %d hitters, %d pitchers",
 # --- 8. assemble and write ---------------------------------------------------
 payload <- build_payload(window_tx, teams, people, avail, mlb_needs, farm_needs,
                          fg_play, fg_car, milb_hit, milb_pit, as_of = AS_OF,
-                         plus_cut = plus_cut, baselines = baselines)
+                         plus_cut = plus_cut, baselines = baselines,
+                         acq_rates = acq_rates)
 if (snapshot) {
   payload$snapshot <- TRUE
   payload$asOf <- as.character(AS_OF)

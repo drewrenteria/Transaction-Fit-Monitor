@@ -93,6 +93,50 @@ build_availability <- function(txns, as_of = AS_OF, roster40 = list()) {
   out
 }
 
+#' How often a player who hits the market at each level is actually acquired by
+#' another club.
+#'
+#' Measured over the 2026 season: 396 rookie-level players reached the market
+#' and twelve were taken, a 3.0% rate against 32.4% in the majors and 26.1% in
+#' Triple-A. Rookie and complex ball nonetheless supplied about a third of the
+#' board, so a third of what the page showed was, by its own purpose, noise.
+#'
+#' Computed from whatever history the build pulled rather than hardcoded, so
+#' the number stays true next season instead of quietly going stale.
+acquisition_rates <- function(txns) {
+  tx <- txns %>% filter(!is.na(mlbam_id), affiliated) %>%
+    arrange(mlbam_id, date, txn_id)
+  if (nrow(tx) == 0) return(list())
+
+  opened <- list(); taken <- list()
+  for (idx in split(seq_len(nrow(tx)), tx$mlbam_id)) {
+    rows <- tx[idx, ]
+    open_lv <- NULL; open_from <- NULL
+    for (i in seq_len(nrow(rows))) {
+      ty <- rows$txn_type[i]
+      if (ty %in% MARKET_OPEN) {
+        open_lv <- rows$level[i]; open_from <- rows$org[i]
+        if (!is.na(open_lv)) opened[[open_lv]] <- (opened[[open_lv]] %||% 0) + 1
+      } else if (ty %in% c("Claimed", "Signed", "Trade")) {
+        if (!is.null(open_lv) && !is.na(open_lv) && !is.na(rows$org[i]) &&
+            !identical(rows$org[i], open_from))
+          taken[[open_lv]] <- (taken[[open_lv]] %||% 0) + 1
+        open_lv <- NULL
+      } else if (ty %in% MARKET_CLOSE) {
+        open_lv <- NULL
+      }
+    }
+  }
+  out <- list()
+  for (lv in names(opened)) {
+    n <- opened[[lv]]; k <- taken[[lv]] %||% 0
+    if (n < 20) next                       # too thin to quote a rate
+    out[[lv]] <- list(opened = as.integer(n), acquired = as.integer(k),
+                      rate = round(k / n, 4))
+  }
+  out
+}
+
 #' Mark who is new to the market since a cutoff. A returning reader wants the
 #' handful that changed, not the whole board again.
 mark_new_entrants <- function(avail, txns, as_of = AS_OF, days = 7L) {

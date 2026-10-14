@@ -212,6 +212,28 @@ the distortion was worst. Rookie-ball hitters average a .369 OBP and a 92 OBP+:
 they look excellent by a major league yardstick and are below average for where
 they actually play.
 
+**A third of the board was from a level nobody shops.** Counting every player
+who reached the market in 2026 and whether another club took him:
+
+| level | hit the market | acquired | rate |
+|---|---|---|---|
+| MLB | 578 | 187 | **32.4%** |
+| Triple-A | 440 | 115 | 26.1% |
+| Double-A | 189 | 26 | 13.8% |
+| High-A | 151 | 16 | 10.6% |
+| Single-A | 168 | 10 | 6.0% |
+| **Rookie** | **396** | **12** | **3.0%** |
+
+Rookie and complex ball is ten times less gettable than the majors, and it was
+supplying about a third of everyone shown, crowding out the names actually in
+play. Those players are now in a collapsed section with the rate stated rather
+than deleted, because twelve of them did get taken. The rate is recomputed on
+every build from whatever history was pulled, so it stays true next season
+instead of quietly going stale.
+
+This is also the one finding here with no confound to argue about. How gettable
+a player is, by level, is a plain descriptive fact.
+
 **Sample size cuts both ways.** Only good numbers get flagged, so an ungated
 small sample fills the board with players whose rates look strong precisely
 because the sample is small. Rates are credited in tiers by where they

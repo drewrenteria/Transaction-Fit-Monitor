@@ -99,6 +99,13 @@ MARKET_CLOSE <- c("Claimed", "Signed", "Trade", "Selected Contract",
 MLB40_EVENTS <- c("DFA", "Claimed", "Trade", "Selected Contract",
                   "Purchased Contract", "Recall", "Option", "Outrighted")
 
+# Levels kept off the main board. A player who hits the market at rookie or
+# complex level is acquired by another club about 3% of the time, against 32%
+# in the majors and 26% in Triple-A, yet that level supplied roughly a third of
+# everyone shown. They are still listed, in a collapsed section with the rate
+# stated, rather than deleted: twelve of them did get taken in 2026.
+LOW_SIGNAL_LEVELS <- c("Rookie")
+
 # --- need thresholds ---------------------------------------------------------
 # A metric is a need only when the club is BOTH low in rank AND a real distance
 # below average. Rank alone flags 15 of 30 clubs on every metric by construction.

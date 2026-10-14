@@ -50,7 +50,7 @@ track_record <- function(pl) {
 build_payload <- function(txns, teams, people, avail, mlb_needs, farm_needs,
                           fg_players, fg_career, milb_hit, milb_pit,
                           as_of = AS_OF, span_from = SEASON - (SPAN_YEARS - 1),
-                          plus_cut = NULL, baselines = NULL) {
+                          plus_cut = NULL, baselines = NULL, acq_rates = NULL) {
 
   # ---- players ----
   PL <- list()
@@ -120,6 +120,8 @@ build_payload <- function(txns, teams, people, avail, mlb_needs, farm_needs,
     # level-adjusted cutoffs and the league baselines they came from, so the
     # page can grade a minor leaguer against his own league
     plusCut = plus_cut, baselines = baselines,
+    # how often a player who hits the market at each level is actually taken
+    acqRates = acq_rates, lowSignalLevels = as.list(LOW_SIGNAL_LEVELS),
     players = PL, avail = avail, txns = TX, board = board,
     newCount = as.integer(n_new),
     audit = list(
